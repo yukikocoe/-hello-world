@@ -1,0 +1,293 @@
+<!--
+  ============================================================================
+  Aruba ClearPass Guest — Web Login page fragment (Neumorphic staff portal)
+  ============================================================================
+  WHERE TO PASTE THIS:
+    Guest > Configuration > Pages > Web Logins > [create/edit page]
+      -> "Advanced" / "Edit the HTML" (raw HTML source mode)
+
+  DO NOT paste this into a Skin's "raw HTML" header/footer as a full page —
+  paste it as the PAGE CONTENT only. The Skin already supplies
+  <html>/<head>/<body>, so this file intentionally contains no DOCTYPE,
+  <html>, <head>, or <body> tags.
+
+  BEFORE YOU PASTE — READ THIS:
+  1. Create/open the Web Login page and set "Vendor Settings" to match your
+     controller/gateway (e.g. "Aruba Networks") and set the Login Method to
+     your AD/RADIUS auth source. Save it ONCE with the default generated
+     form so you have a known-working baseline.
+  2. Re-open the page in the editor and use "View Source" (or the toolbar's
+     "Insert Login Form" action) to get the ACTUAL <form> markup ClearPass
+     generated for your vendor/version — including hidden fields for
+     client MAC, SSID/BSSID, switch IP, and the redirect/csrf token.
+  3. Paste that generated <form>...</form> into the clearly marked
+     "PASTE YOUR GENERATED LOGIN FORM HERE" block below, in place of the
+     placeholder form. Do NOT hand-type field names — they vary by
+     ClearPass version and NAS vendor, and guessing wrong breaks auth.
+  4. Fonts: this fragment intentionally avoids external font CDNs (Google
+     Fonts etc.) because unauthenticated clients usually sit behind a
+     walled garden that blocks non-whitelisted domains, which can hang the
+     page load. It uses a Thai-capable system font stack instead. If you
+     want a custom webfont, upload the .woff2 via
+     Guest > Content Manager and reference the relative path it gives you
+     in a @font-face rule, or add the CDN domain to your walled garden.
+  5. Logo/icons: the icons below are inline SVG (no external requests), so
+     they render even inside the walled garden with no extra config.
+  ============================================================================
+-->
+
+<style>
+  .cp-neu{
+    --bg:#e8ecf3;
+    --shadow-dark:#c1c9d6;
+    --shadow-light:#ffffff;
+    --text-primary:#233043;
+    --text-secondary:#66748c;
+    --text-muted:#8996ac;
+    --accent-1:#2dd4bf;
+    --accent-2:#0f766e;
+
+    --raise:9px 9px 18px var(--shadow-dark), -9px -9px 18px var(--shadow-light);
+    --raise-sm:5px 5px 10px var(--shadow-dark), -5px -5px 10px var(--shadow-light);
+    --raise-lg:14px 14px 28px var(--shadow-dark), -14px -14px 28px var(--shadow-light);
+    --press:inset 4px 4px 8px var(--shadow-dark), inset -4px -4px 8px var(--shadow-light);
+    --press-sm:inset 3px 3px 6px var(--shadow-dark), inset -3px -3px 6px var(--shadow-light);
+
+    box-sizing:border-box;
+    background:var(--bg);
+    font-family:"Leelawadee UI","Noto Sans Thai","Tahoma",system-ui,-apple-system,sans-serif;
+    color:var(--text-primary);
+    min-height:100vh;
+    margin:0;
+    padding:48px clamp(24px,6vw,88px);
+    display:flex;
+    flex-direction:column;
+    gap:32px;
+  }
+  .cp-neu *{box-sizing:border-box;}
+
+  .cp-neu .top-row{
+    flex:1;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:40px;
+    flex-wrap:wrap;
+  }
+
+  /* -------- Hero / left side -------- */
+  .cp-neu .hero{
+    flex:1 1 520px;
+    min-width:280px;
+    display:flex;
+    flex-direction:column;
+    height:100%;
+    justify-content:center;
+    gap:56px;
+  }
+
+  .cp-neu .brand{display:flex;align-items:center;gap:14px;}
+  .cp-neu .brand-mark{
+    width:56px;height:56px;border-radius:18px;
+    background:var(--bg);box-shadow:var(--raise-sm);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .cp-neu .brand-mark svg{width:30px;height:30px;}
+  .cp-neu .brand-word{display:flex;flex-direction:column;line-height:1.15;}
+  .cp-neu .brand-word .name{font-weight:800;font-size:20px;letter-spacing:.5px;color:var(--text-primary);}
+  .cp-neu .brand-word .name span{color:var(--accent-2);}
+  .cp-neu .brand-word .sub{
+    font-size:12px;font-weight:600;letter-spacing:1.5px;color:var(--text-muted);
+    text-transform:uppercase;margin-top:2px;
+  }
+
+  .cp-neu .hero-content{display:flex;flex-direction:column;gap:22px;max-width:620px;}
+  .cp-neu .eyebrow{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--accent-2);}
+  .cp-neu h1{margin:0;font-size:clamp(30px,4vw,44px);line-height:1.28;font-weight:800;color:var(--text-primary);}
+  .cp-neu .lede{margin:0;font-size:16px;line-height:1.8;color:var(--text-secondary);max-width:540px;}
+
+  .cp-neu .badges{display:flex;flex-wrap:wrap;gap:14px;margin-top:6px;}
+  .cp-neu .badge{
+    display:flex;align-items:center;gap:9px;padding:12px 18px;border-radius:16px;
+    background:var(--bg);box-shadow:var(--raise-sm);font-size:13.5px;font-weight:600;
+    color:var(--text-primary);white-space:nowrap;
+  }
+  .cp-neu .badge svg{width:18px;height:18px;flex-shrink:0;color:var(--accent-2);}
+
+  /* -------- Login card / right side -------- */
+  .cp-neu .login-card{
+    flex:0 0 auto;width:420px;max-width:100%;
+    background:var(--bg);border-radius:26px;box-shadow:var(--raise-lg);
+    padding:38px 34px 32px;
+  }
+  .cp-neu .card-head{display:flex;align-items:center;gap:16px;margin-bottom:26px;}
+  .cp-neu .lock-badge{
+    width:52px;height:52px;border-radius:16px;flex-shrink:0;
+    background:var(--bg);box-shadow:var(--raise-sm);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .cp-neu .lock-badge svg{width:24px;height:24px;color:var(--accent-2);}
+  .cp-neu .card-head h2{margin:0 0 3px;font-size:19px;font-weight:700;color:var(--text-primary);}
+  .cp-neu .card-head p{margin:0;font-size:12.5px;color:var(--text-muted);line-height:1.4;}
+
+  /* Field styling — reuse these classes on YOUR generated form's inputs */
+  .cp-neu .cp-field{margin-bottom:20px;}
+  .cp-neu .cp-field label{display:block;font-size:12.5px;font-weight:700;color:var(--text-secondary);margin-bottom:9px;}
+  .cp-neu .cp-field-input{
+    display:flex;align-items:center;gap:10px;background:var(--bg);
+    border-radius:14px;box-shadow:var(--press-sm);padding:0 16px;height:50px;
+  }
+  .cp-neu .cp-field-input svg{width:18px;height:18px;color:var(--text-muted);flex-shrink:0;}
+  .cp-neu .cp-field-input input{
+    border:none;outline:none;background:transparent;flex:1;height:100%;
+    font-family:inherit;font-size:14.5px;color:var(--text-primary);
+  }
+  .cp-neu .cp-field-input input::placeholder{color:#a3aec2;}
+
+  .cp-neu .cp-submit{
+    margin-top:6px;width:100%;height:52px;border:none;border-radius:15px;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:9px;
+    font-family:inherit;font-size:15.5px;font-weight:700;color:#fff;white-space:nowrap;
+    background:linear-gradient(135deg,var(--accent-1),var(--accent-2));
+    box-shadow:var(--raise-sm), 0 10px 22px -10px rgba(15,118,110,0.5);
+  }
+  .cp-neu .cp-submit svg{width:17px;height:17px;flex-shrink:0;}
+
+  .cp-neu .hint{
+    margin:18px 0 0;display:flex;align-items:center;justify-content:center;gap:7px;
+    font-size:12px;color:var(--text-muted);
+  }
+  .cp-neu .hint svg{width:14px;height:14px;color:#4fae6a;flex-shrink:0;}
+
+  .cp-neu .footer-bar{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    padding-top:20px;border-top:1px solid rgba(255,255,255,0.6);
+    font-size:12px;color:var(--text-muted);
+  }
+  .cp-neu .footer-bar strong{color:var(--text-secondary);font-weight:700;letter-spacing:.4px;}
+
+  @media (max-width:900px){
+    .cp-neu .top-row{justify-content:center;}
+    .cp-neu .hero{align-items:center;text-align:center;}
+    .cp-neu .hero-content{align-items:center;}
+    .cp-neu .badges{justify-content:center;}
+    .cp-neu .brand{justify-content:center;}
+    .cp-neu .login-card{margin:0 auto;}
+  }
+  @media (max-width:480px){
+    .cp-neu{padding:28px 18px;}
+    .cp-neu .login-card{padding:30px 22px 26px;}
+    .cp-neu .footer-bar{flex-direction:column;text-align:center;}
+  }
+</style>
+
+<div class="cp-neu">
+  <div class="top-row">
+
+    <!-- ===== Hero / left side ===== -->
+    <div class="hero">
+      <div class="brand">
+        <div class="brand-mark">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 2L4 5.5V11c0 5.25 3.4 9.86 8 11 4.6-1.14 8-5.75 8-11V5.5L12 2Z" stroke="#0f766e" stroke-width="1.8" stroke-linejoin="round"/>
+            <path d="M9 12.2l2.1 2.1L15.3 10" stroke="#0f766e" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="brand-word">
+          <span class="name">Aruba <span>ClearPass</span></span>
+          <span class="sub">Staff Access Portal</span>
+        </div>
+      </div>
+
+      <div class="hero-content">
+        <span class="eyebrow">ARUBA CLEARPASS &middot; NETWORK ACCESS</span>
+        <h1>การเข้าถึงเครือข่ายองค์กร<br/>ปลอดภัย รวดเร็ว<br/>และตรวจสอบได้ทุกอุปกรณ์</h1>
+        <p class="lede">
+          จัดการการลงทะเบียนอุปกรณ์ สิทธิ์การเชื่อมต่อ Wi-Fi/LAN และนโยบายความปลอดภัยเครือข่าย
+          ผ่านพอร์ทัล Aruba ClearPass สำหรับเจ้าหน้าที่องค์กรโดยเฉพาะ
+        </p>
+
+        <div class="badges">
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="7" y="2" width="10" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M11 18h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            ลงทะเบียนอุปกรณ์
+          </div>
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M2 8.5c5.5-5.3 14.5-5.3 20 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M5.5 12.3c3.7-3.5 9.3-3.5 13 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M9 16.1c1.9-1.7 4.1-1.7 6 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="19.3" r="1.2" fill="currentColor"/></svg>
+            สิทธิ์เข้าถึงเครือข่าย
+          </div>
+          <div class="badge">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 5.5V11c0 5.25 3.4 9.86 8 11 4.6-1.14 8-5.75 8-11V5.5L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+            นโยบายความปลอดภัย
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== Login card / right side ===== -->
+    <div class="login-card">
+      <div class="card-head">
+        <div class="lock-badge">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="10.5" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 10.5V7.2a4.5 4.5 0 0 1 9 0v3.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+        </div>
+        <div>
+          <h2>เข้าสู่ระบบ</h2>
+          <p>ใช้บัญชี Active Directory หรือบัญชี ClearPass ของคุณ</p>
+        </div>
+      </div>
+
+      <!--
+        ==========================================================
+        PASTE YOUR GENERATED LOGIN FORM HERE
+        ==========================================================
+        Replace the placeholder <form> below with the ACTUAL form
+        markup ClearPass generated for your Vendor Settings (see
+        the notes at the top of this file). Keep every hidden
+        <input> exactly as generated — only add class="cp-field",
+        class="cp-field-input" and class="cp-submit" to restyle
+        the visible username/password/submit elements so the
+        neumorphic look applies without touching auth logic.
+      -->
+      <form>
+        <div class="cp-field">
+          <label for="username">ชื่อผู้ใช้เครือข่าย</label>
+          <div class="cp-field-input">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="1.8"/><path d="M4.5 19.5c1.6-3.3 4.5-5 7.5-5s5.9 1.7 7.5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <!-- rename "username" to match your generated field's name/id -->
+            <input id="username" name="username" type="text" placeholder="Network ID หรือชื่อผู้ใช้ Windows" />
+          </div>
+        </div>
+
+        <div class="cp-field">
+          <label for="password">รหัสผ่าน</label>
+          <div class="cp-field-input">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="4" y="10.5" width="16" height="10" rx="2.5" stroke="currentColor" stroke-width="1.8"/><path d="M7.5 10.5V7.2a4.5 4.5 0 0 1 9 0v3.3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            <!-- rename "password" to match your generated field's name/id -->
+            <input id="password" name="password" type="password" placeholder="รหัสผ่าน" />
+          </div>
+        </div>
+
+        <!-- keep any hidden <input> fields ClearPass generated (mac, ssid,
+             switch-ip, redirect URL, csrf token, etc.) here, unchanged -->
+
+        <button type="submit" class="cp-submit">
+          เข้าสู่ระบบ
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12h15" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+      <!-- END: replace the <form> block above with your generated markup -->
+
+      <p class="hint">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 5.5V11c0 5.25 3.4 9.86 8 11 4.6-1.14 8-5.75 8-11V5.5L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12.2l2.1 2.1L15.3 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        บัญชี Active Directory ใช้รหัสผ่านเดียวกับ Windows
+      </p>
+    </div>
+
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <div class="footer-bar">
+    <span><strong>ARUBA CLEARPASS</strong> &nbsp;STAFF PORTAL &middot; ระบบจัดการสิทธิ์การเข้าถึงเครือข่าย</span>
+    <span>พื้นที่สำหรับเจ้าหน้าที่องค์กร</span>
+  </div>
+</div>
