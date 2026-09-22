@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#E3EEF5" />
+<title>ตัวอย่าง Wi-Fi Login (โรงพยาบาลเอกชล) — พรีวิวก่อนติดตั้งบน ClearPass</title>
+</head>
+<body style="margin:0;">
+<!-- Standalone browser preview of clearpass-guest-login.html. This file is NOT what you paste into ClearPass; use clearpass-guest-login.html for that. -->
+<!--
+  ============================================================================
+  Aruba ClearPass Guest — Web Login page fragment (Aikchol Hospital, Claymorphism)
+  ============================================================================
+  WHERE TO PASTE THIS:
+    Guest > Configuration > Pages > Web Logins > [create/edit page]
+      -> "Advanced" / "Edit the HTML" (raw HTML source mode)
+
+  DO NOT paste this into a Skin's raw header/footer HTML as a full page — this
+  is the PAGE CONTENT only. The Skin already supplies <html>/<head>/<body>, so
+  this fragment intentionally has no DOCTYPE, <html>, <head>, or <body> tags.
+
+  BEFORE YOU PASTE — READ THIS:
+  1. Create/open the Web Login page and set "Vendor Settings" to match your
+     controller/gateway, and set the Login Method (e.g. Auth via RADIUS for
+     hospital-issued accounts, or a Guest/Local login) as your deployment
+     needs. Save it ONCE with the default generated form so you have a
+     known-working baseline before customizing anything.
+  2. Re-open the page in the editor and use "View Source" (or the toolbar's
+     "Insert Login Form" action) to get the ACTUAL <form>...</form> markup
+     ClearPass generated for your vendor/version — it contains hidden fields
+     (client MAC, SSID/BSSID, switch/controller IP, redirect URL, CSRF token)
+     that vary by NAS vendor and CPPM version.
+  3. Paste that generated form into the block marked
+     "PASTE YOUR GENERATED LOGIN FORM HERE" below, REPLACING the placeholder
+     <form>. Keep every hidden <input> exactly as generated. Only add the
+     classes below (cp-field / cp-field-input / cp-submit) to the visible
+     username/password/submit elements so the design applies without
+     touching the auth logic. Do not hand-type field names — guessing wrong
+     breaks authentication.
+  4. Login error message: if the generated form/page includes an error
+     placeholder (commonly a Velocity variable such as $errorMsg or
+     $login_message rendered on a failed attempt), wrap it in
+     <div class="cp-error">...</div> so it's styled consistently — don't
+     delete it, or users get no feedback on a wrong password.
+  5. Fonts: this fragment avoids external font CDNs (Google Fonts etc.)
+     because unauthenticated guest clients usually sit behind a walled
+     garden that blocks non-whitelisted domains, which can hang page load.
+     It uses a Thai-capable system font stack instead. To use the original
+     "Noto Sans Thai" webfont, upload the .ttf/.woff2 via
+     Guest > Content Manager and add a @font-face rule pointing at the path
+     Content Manager gives you, or allow fonts.googleapis.com /
+     fonts.gstatic.com in your walled garden ACL.
+  6. Logo & background photo: the block below ships with a zero-dependency
+     text wordmark and a CSS gradient background so it renders correctly
+     with NO uploads required. To use the hospital's real logo and lobby
+     photo, upload them via Guest > Content Manager, then swap the
+     `.logo-mark` block / `background` declaration for an <img>/url() that
+     points at the path Content Manager shows you (see comments inline).
+  7. Icons are inline SVG (no external requests) so they render even inside
+     the walled garden with no extra config.
+  ============================================================================
+-->
+
+<style>
+  .cp-clay{
+    --brand:#0B4F7E;
+    --brand-2:#3FBFC4;
+    --accent:#F5B335;
+    --canvas:#E3EEF5;
+    --surface:#F2F8FC;
+    --p-teal:#C9ECEA;
+    --p-amber:#FFE7B8;
+    --ink:#123A52;
+    --ink-2:#3E5C71;
+    --in-l:rgba(255,255,255,.85);
+    --in-d:rgba(11,79,126,.12);
+    --sh-out:rgba(11,79,126,.14);
+    --clay:0 16px 32px var(--sh-out), inset 0 -9px 18px var(--in-d), inset 0 7px 14px var(--in-l);
+    --clay-sm:0 8px 18px var(--sh-out), inset 0 -6px 12px var(--in-d), inset 0 5px 10px var(--in-l);
+    --cav:inset 0 4px 10px rgba(11,79,126,.10), inset 0 -3px 7px var(--in-l);
+
+    box-sizing:border-box;
+    min-height:100vh;
+    margin:0;
+    padding:44px clamp(20px,5vw,72px);
+    display:flex;
+    flex-direction:column;
+    gap:28px;
+    color:var(--ink);
+    font-family:"Leelawadee UI","Noto Sans Thai","Tahoma",system-ui,-apple-system,sans-serif;
+    /* Zero-dependency background; swap for the uploaded lobby photo (see note 6 above):
+       background: url('/guest-pages/assets/hospital-background.jpg') center/cover no-repeat; */
+    background:
+      radial-gradient(circle at 85% 15%, rgba(63,191,196,0.18), transparent 45%),
+      radial-gradient(circle at 10% 85%, rgba(245,179,53,0.14), transparent 40%),
+      var(--canvas);
+  }
+  .cp-clay *{box-sizing:border-box;}
+
+  .cp-clay .top-row{flex:1;display:flex;align-items:center;justify-content:space-between;gap:48px;flex-wrap:wrap;}
+
+  /* -------- Welcome / left side -------- */
+  .cp-clay .hero{flex:1 1 480px;min-width:280px;display:flex;flex-direction:column;justify-content:center;gap:26px;}
+
+  .cp-clay .logo-mark{display:flex;align-items:center;gap:12px;}
+  .cp-clay .logo-badge{
+    width:46px;height:46px;border-radius:14px;background:var(--surface);
+    box-shadow:var(--clay-sm);display:flex;align-items:center;justify-content:center;color:var(--brand);flex-shrink:0;
+  }
+  .cp-clay .logo-badge svg{width:24px;height:24px;}
+  .cp-clay .logo-text{display:flex;flex-direction:column;line-height:1.15;}
+  .cp-clay .logo-text .th{font-weight:800;font-size:19px;color:var(--brand);}
+  .cp-clay .logo-text .en{font-size:10px;font-weight:600;letter-spacing:1.5px;color:var(--ink-2);text-transform:uppercase;}
+
+  .cp-clay .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;width:fit-content;padding:7px 15px;
+    background:rgba(242,248,252,.9);box-shadow:var(--clay-sm);border-radius:999px;font-size:12px;font-weight:500;color:var(--ink);
+  }
+  .cp-clay .eyebrow svg{width:16px;height:16px;color:var(--brand);}
+
+  .cp-clay h1{margin:14px 0 0;font-size:clamp(26px,3.4vw,40px);font-weight:700;line-height:1.45;letter-spacing:-.8px;}
+  .cp-clay h1 span{color:#147e8c;}
+  .cp-clay .welcome-copy{margin:0;font-size:14px;line-height:1.9;color:var(--ink-2);max-width:520px;}
+
+  .cp-clay .care-note{
+    margin-top:8px;display:flex;gap:13px;align-items:center;padding:14px 22px 14px 14px;border-radius:22px;
+    background:rgba(242,248,252,.94);box-shadow:var(--clay-sm);width:fit-content;
+  }
+  .cp-clay .care-icon{
+    display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:var(--p-amber);color:var(--brand);flex-shrink:0;
+  }
+  .cp-clay .care-icon svg{width:20px;height:20px;}
+  .cp-clay .care-note strong{display:block;font-size:13px;font-weight:600;}
+  .cp-clay .care-note span{display:block;font-size:11px;color:var(--ink-2);}
+
+  /* -------- Login card / right side -------- */
+  .cp-clay .login-card{
+    flex:0 0 auto;width:420px;max-width:100%;background:rgba(242,248,252,.98);
+    border:1px solid rgba(255,255,255,.7);border-radius:30px;box-shadow:var(--clay);padding:32px 32px 0;overflow:hidden;
+  }
+  .cp-clay .card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  .cp-clay .wifi-tile{width:52px;height:52px;display:grid;place-items:center;background:var(--p-teal);color:var(--brand);border-radius:18px;box-shadow:var(--clay-sm);}
+  .cp-clay .wifi-tile svg{width:26px;height:26px;}
+  .cp-clay .mini-label{font-size:10px;letter-spacing:2px;color:var(--ink-2);}
+  .cp-clay .card-heading h2{font-size:26px;margin:0;letter-spacing:-.5px;}
+  .cp-clay .card-intro{margin:8px 0 22px;font-size:13.5px;color:var(--ink-2);}
+
+  .cp-clay .cp-field{margin-bottom:16px;}
+  .cp-clay .cp-field label{display:flex;gap:8px;align-items:baseline;font-size:13px;font-weight:600;margin-bottom:8px;}
+  .cp-clay .cp-field label span{font-size:11px;font-weight:400;color:var(--ink-2);}
+  .cp-clay .cp-field-input{
+    display:flex;align-items:center;gap:11px;padding:0 15px;min-height:52px;border-radius:15px;
+    background:#e5eef4;box-shadow:var(--cav);border:1px solid transparent;
+  }
+  .cp-clay .cp-field-input:focus-within{border-color:#16858c;box-shadow:var(--cav),0 0 0 3px rgba(63,191,196,.14);}
+  .cp-clay .cp-field-input svg{width:18px;height:18px;color:#526f83;flex-shrink:0;}
+  .cp-clay .cp-field-input input{background:transparent;border:0;min-width:0;width:100%;height:48px;color:var(--ink);font-size:15.5px;outline:none;font-family:inherit;}
+  .cp-clay .cp-field-input input::placeholder{font-size:13px;color:#617b8c;}
+  .cp-clay .cp-toggle-pw{background:none;border:0;display:grid;place-items:center;min-width:40px;min-height:40px;color:#526f83;border-radius:11px;cursor:pointer;}
+  .cp-clay .cp-toggle-pw:hover{color:var(--brand);background:var(--p-teal);}
+
+  .cp-clay .cp-hint{font-size:11px;color:var(--ink-2);margin:-6px 0 16px;}
+
+  .cp-clay .cp-error{display:none;font-size:12px;color:#a02e2a;background:#fdeceb;border-radius:12px;padding:11px 14px;margin:0 0 16px;}
+  /* ClearPass will typically render its error message text inside here when login fails; if your
+     generated markup provides its own error element instead, move class="cp-error" onto that one
+     and delete this placeholder <div>. */
+
+  .cp-clay .cp-submit{
+    width:100%;border:0;border-radius:16px;min-height:54px;padding:13px 20px;margin-bottom:26px;
+    background:var(--brand);color:#fff;font-size:15px;font-weight:600;
+    box-shadow:0 9px 17px rgba(11,79,126,.24), inset 0 3px 6px rgba(255,255,255,.25), inset 0 -5px 9px rgba(0,26,48,.26);
+    display:flex;align-items:center;justify-content:center;gap:12px;cursor:pointer;font-family:inherit;
+  }
+  .cp-clay .cp-submit svg{width:18px;height:18px;}
+  .cp-clay .cp-submit:hover{transform:translateY(-1px);}
+  .cp-clay .cp-submit:active{transform:translateY(1px);}
+
+  .cp-clay .card-bottom{
+    margin:0 -32px;padding:14px 20px;background:#e7f1f5;border-top:1px solid rgba(11,79,126,.06);
+    display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;color:var(--ink-2);
+  }
+  .cp-clay .card-bottom svg{width:14px;height:14px;color:#1a8189;}
+
+  .cp-clay .footer-bar{
+    display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;
+    font-size:11px;color:var(--ink-2);padding-top:8px;
+  }
+
+  @media (max-width:900px){
+    .cp-clay .top-row{justify-content:center;}
+    .cp-clay .hero{align-items:center;text-align:center;}
+    .cp-clay .eyebrow,.cp-clay .logo-mark{align-self:center;}
+    .cp-clay .care-note{margin-inline:auto;}
+    .cp-clay .login-card{margin:0 auto;}
+  }
+  @media (max-width:480px){
+    .cp-clay{padding:26px 16px;}
+    .cp-clay .login-card{padding:26px 22px 0;}
+    .cp-clay .card-bottom{margin-inline:-22px;}
+    .cp-clay .footer-bar{flex-direction:column;text-align:center;}
+  }
+</style>
+
+<div class="cp-clay">
+  <div class="top-row">
+
+    <!-- ===== Welcome / left side ===== -->
+    <div class="hero">
+      <div class="logo-mark">
+        <span class="logo-badge">
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L4 5.5V11c0 5.25 3.4 9.86 8 11 4.6-1.14 8-5.75 8-11V5.5L12 2Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M9 12.2l2.1 2.1L15.3 10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </span>
+        <!-- Swap this block for <img src="[Content Manager path]/logo.png" alt="โรงพยาบาลเอกชล"> once uploaded -->
+        <span class="logo-text"><span class="th">โรงพยาบาลเอกชล</span><span class="en">Aikchol Hospital</span></span>
+      </div>
+
+      <span class="eyebrow">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8a15 15 0 0 1 18 0M6 12a10 10 0 0 1 12 0M9 16a5 5 0 0 1 6 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg>
+        อยู่ใกล้กัน แม้ในโลกออนไลน์
+      </span>
+
+      <h1>เชื่อมต่อทุกความห่วงใย<br><span>ให้ใกล้คุณยิ่งขึ้น</span></h1>
+      <p class="welcome-copy">ยินดีต้อนรับสู่ Wi-Fi โรงพยาบาลเอกชล<br>ให้คุณไม่พลาดการติดต่อกับคนสำคัญ ตลอดเวลาที่อยู่กับเรา</p>
+
+      <div class="care-note">
+        <span class="care-icon"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 5c-3-3-6-1-8 1-2-2-5-4-8-1-4 4 0 9 8 15 8-6 12-11 8-15Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg></span>
+        <div><strong>ดูแลด้วยใจ ใกล้คุณเสมอ</strong><span>Connected with care.</span></div>
+      </div>
+    </div>
+
+    <!-- ===== Login card / right side ===== -->
+    <div class="login-card">
+      <div class="card-heading">
+        <span class="wifi-tile"><svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M3 8a15 15 0 0 1 18 0M6 12a10 10 0 0 1 12 0M9 16a5 5 0 0 1 6 0" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="20" r="1" fill="currentColor"/></svg></span>
+        <span class="mini-label">HOSPITAL WI-FI</span>
+      </div>
+      <h2>ยินดีต้อนรับ</h2>
+      <p class="card-intro">เข้าสู่ระบบเพื่อเชื่อมต่ออินเทอร์เน็ต</p>
+
+      <div class="cp-error" id="cpError"><!-- ClearPass error text (e.g. $errorMsg) renders here on failed login --></div>
+
+      <!--
+        ==========================================================
+        PASTE YOUR GENERATED LOGIN FORM HERE
+        ==========================================================
+        Replace the placeholder <form> below with the ACTUAL form markup
+        ClearPass generated for your Vendor Settings (see notes 1-4 at the
+        top of this file). Keep every hidden <input> exactly as generated —
+        only add class="cp-field" / class="cp-field-input" / class="cp-submit"
+        to the visible username, password and submit elements.
+      -->
+      <form>
+        <div class="cp-field">
+          <label for="username">ชื่อผู้ใช้งาน <span>Username</span></label>
+          <div class="cp-field-input">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="8" r="4" stroke="currentColor" stroke-width="1.7"/><path d="M5 21v-2a7 7 0 0 1 14 0v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <!-- rename "username" to match your generated field's name/id -->
+            <input id="username" name="username" type="text" placeholder="กรอกชื่อผู้ใช้งาน" autocapitalize="none" spellcheck="false" required>
+          </div>
+        </div>
+
+        <div class="cp-field">
+          <label for="password">รหัสผ่าน <span>Password</span></label>
+          <div class="cp-field-input">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="10" width="14" height="11" rx="3" stroke="currentColor" stroke-width="1.7"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>
+            <!-- rename "password" to match your generated field's name/id -->
+            <input id="password" name="password" type="password" placeholder="กรอกรหัสผ่าน" required>
+            <button class="cp-toggle-pw" type="button" id="cpTogglePw" aria-label="แสดงรหัสผ่าน" aria-pressed="false">
+              <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" id="cpEyeIcon"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.7"/></svg>
+            </button>
+          </div>
+        </div>
+
+        <p class="cp-hint">ใช้บัญชีที่ได้รับจากโรงพยาบาล</p>
+
+        <!-- keep any hidden <input> fields ClearPass generated (mac, ssid, bssid,
+             switch/controller IP, redirect url, csrf token, etc.) here, unchanged -->
+
+        <button type="submit" class="cp-submit">
+          <span>เข้าสู่ระบบ</span>
+          <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M4 12h16m-6-6 6 6-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </form>
+      <!-- END: replace the <form> block above with your generated markup -->
+
+      <div class="card-bottom">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 5c-3-3-6-1-8 1-2-2-5-4-8-1-4 4 0 9 8 15 8-6 12-11 8-15Z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>
+        <span>อีกหนึ่งความใส่ใจ จากโรงพยาบาลเอกชล</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== Footer ===== -->
+  <div class="footer-bar">
+    <span>&copy; <span id="cpYear">2026</span> Aikchol Hospital. All rights reserved.</span>
+    <span>เชื่อมต่อด้วยความใส่ใจ &middot; AIKCHOL CONNECT</span>
+  </div>
+</div>
+
+<script>
+  (function(){
+    var pw = document.getElementById('password');
+    var btn = document.getElementById('cpTogglePw');
+    if (pw && btn) {
+      btn.addEventListener('click', function () {
+        var show = pw.type === 'password';
+        pw.type = show ? 'text' : 'password';
+        btn.setAttribute('aria-pressed', String(show));
+        btn.setAttribute('aria-label', show ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+      });
+    }
+    var yearEl = document.getElementById('cpYear');
+    if (yearEl) { yearEl.textContent = new Date().getFullYear(); }
+    /* Intentionally NOT intercepting form submit / preventDefault here —
+       the real <form> you paste in must submit natively to ClearPass. If the
+       generated form has its own onsubmit="..." handler (e.g. checkLoginForm),
+       keep it on the <form> tag; do not remove it. */
+  })();
+</script>
+<script>
+  document.querySelector(".cp-clay form").addEventListener("submit", function(e){
+    e.preventDefault();
+    alert("นี่คือหน้าพรีวิวเท่านั้น ยังไม่ได้เชื่อมต่อ ClearPass — ใช้ clearpass-guest-login.html ในการติดตั้งจริง");
+  });
+</script>
+</body>
+</html>
