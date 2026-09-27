@@ -1,0 +1,225 @@
+<!--
+  Aikchol Staff Portal — ClearPass Guest Web Login (Header HTML)
+  วางโค้ดทั้งหมดนี้ในช่อง "Header HTML" ของ Web Login page
+  และติ๊ก "Custom Form: Provide a custom login form" (ดู README.md)
+
+  ไฟล์ภาพ/ฟอนต์ต้องอัปโหลดใน Administration > Content Manager > Public Files:
+    aikchol-logo.png, aikchol-staff-bg.png, noto-sans-thai.ttf
+  หาก URL ของ Public Files บนเครื่องไม่ใช่ /public/... ให้แก้ path /public/ ในโค้ดด้านล่าง (ค้นหาคำว่า /public/)
+-->
+{literal}
+<style>
+@font-face{font-family:'Noto Sans Thai';src:url('/public/noto-sans-thai.ttf') format('truetype');font-weight:100 900;font-display:swap}
+html,body{margin:0;padding:0;background:#E3EEF5}
+.ac-portal{--brand:#0B4F7E;--brand-2:#3FBFC4;--p-blue:#CFE7F5;--p-teal:#C9ECEA;--p-amber:#FFE7B8;--surface:#F2F8FC;--ink:#123A52;--ink-2:#3E5C71;--in-l:rgba(255,255,255,.85);--in-d:rgba(11,79,126,.12);--sh-out:rgba(11,79,126,.14);--clay:0 16px 32px var(--sh-out),inset 0 -9px 18px var(--in-d),inset 0 7px 14px var(--in-l);--clay-sm:0 8px 18px var(--sh-out),inset 0 -6px 12px var(--in-d),inset 0 5px 10px var(--in-l);--cav:inset 0 4px 10px rgba(11,79,126,.10),inset 0 -3px 7px var(--in-l);--ease:cubic-bezier(.34,1.4,.44,1);
+  position:relative;isolation:isolate;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;color:var(--ink);font-family:'Noto Sans Thai',Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.7;text-align:left}
+.ac-portal *,.ac-portal *::before,.ac-portal *::after{box-sizing:border-box}
+.ac-portal button,.ac-portal input{font:inherit;-webkit-tap-highlight-color:transparent}
+.ac-portal button{cursor:pointer;color:inherit}
+.ac-portal button:focus-visible,.ac-portal input:focus-visible{outline:3px solid #16858c;outline-offset:4px}
+.ac-portal button:disabled{cursor:wait;opacity:.85}
+.ac-portal h1,.ac-portal h2,.ac-portal p{padding:0;border:0;background:none;text-transform:none;font-family:inherit;color:inherit}
+.ac-icon-library{position:absolute;width:0;height:0;overflow:hidden}
+.ac-portal .icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+.ac-bg{position:fixed;inset:0;z-index:-3;background:#E3EEF5 url('/public/aikchol-staff-bg.png') center center/cover no-repeat}
+.ac-blob{position:fixed;pointer-events:none;z-index:-2;box-shadow:var(--clay);border-radius:50%;animation:ac-floaty 9s ease-in-out infinite alternate}
+.ac-b1{width:115px;height:115px;right:-65px;top:16%;background:var(--p-teal)}
+.ac-b2{width:45px;height:45px;right:7%;bottom:7%;background:var(--p-amber);animation-delay:-4s}
+@keyframes ac-floaty{to{transform:translateY(-14px)}}
+
+.ac-header,.ac-footer{width:min(1320px,100%);margin-inline:auto;padding-inline:48px}
+.ac-header{display:flex;align-items:center;justify-content:space-between;padding-top:35px;padding-bottom:25px}
+.ac-logo{width:225px;height:auto;display:block;filter:drop-shadow(0 2px 12px rgba(255,255,255,.9))}
+.ac-portal-label{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:2px;font-weight:600;color:var(--brand)}
+.ac-portal-label>span{width:7px;height:7px;border-radius:50%;background:var(--brand-2)}
+
+.ac-layout{width:min(1192px,100%);margin:auto;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:64px;padding:30px 40px 48px;flex:1}
+.ac-welcome{align-self:stretch;position:relative;display:flex;flex-direction:column;align-items:flex-start;padding-top:22px;padding-bottom:24px}
+.ac-welcome::before{content:"";position:absolute;inset:-64px -30px auto -30px;height:420px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.92) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%);z-index:-1;pointer-events:none}
+.ac-eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;background:rgba(227,238,245,.94);box-shadow:var(--clay-sm);border-radius:999px;font-size:12px;font-weight:500}
+.ac-eyebrow .icon{width:17px;height:17px;color:var(--brand)}
+.ac-portal h1{font-size:clamp(32px,3.25vw,46px);font-weight:700;line-height:1.48;letter-spacing:-1.1px;margin:25px 0 12px;position:relative;text-shadow:0 1px 14px #fff,0 0 28px #fff}
+.ac-portal h1 span{color:#147e8c}
+.ac-welcome-copy{font-size:14px;line-height:1.9;margin:0;color:var(--ink-2);position:relative;text-shadow:0 1px 14px #fff,0 0 28px #fff}
+
+.ac-clay{background:var(--surface);box-shadow:var(--clay);border-radius:34px}
+.ac-care-note{margin-top:auto;display:flex;gap:13px;align-items:center;padding:14px 22px 14px 14px;border-radius:22px;background:rgba(242,248,252,.94);transform:rotate(-3deg);margin-left:30px}
+.ac-care-note strong,.ac-care-note div>span{display:block}
+.ac-care-note strong{font-size:13px;font-weight:600}
+.ac-care-note div>span{font-size:11px;color:var(--ink-2);letter-spacing:.4px}
+.ac-care-icon,.ac-tile{display:grid;place-items:center;background:var(--p-blue);color:var(--brand);box-shadow:var(--clay-sm)}
+.ac-care-icon{width:43px;height:43px;border-radius:15px}
+
+.ac-card{padding:35px 36px 0;border:1px solid rgba(255,255,255,.7);overflow:hidden;background:rgba(242,248,252,.97)}
+.ac-card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ac-tile{width:58px;height:58px;border-radius:20px}
+.ac-tile .icon{width:28px;height:28px}
+.ac-mini-label{font-size:10px;letter-spacing:2.2px;color:var(--ink-2)}
+.ac-portal h2{font-size:30px;font-weight:700;line-height:1.5;margin:22px 0 3px;letter-spacing:-.5px}
+.ac-card-intro{margin:0 0 26px;font-size:14px;color:var(--ink-2)}
+
+.ac-form{margin:0;padding-bottom:28px}
+.ac-field{margin-bottom:18px}
+.ac-field label{display:flex;gap:8px;align-items:baseline;font-size:13px;font-weight:600;margin-bottom:8px}
+.ac-field label span{font-size:11px;font-weight:400;color:var(--ink-2)}
+.ac-input{display:flex;align-items:center;gap:12px;padding:0 15px;min-height:55px;border-radius:16px;background:#e5eef4;box-shadow:var(--cav);border:1px solid transparent}
+.ac-input>.icon{width:18px;height:18px;color:#526f83}
+.ac-input:focus-within{border-color:#16858c;box-shadow:var(--cav),0 0 0 3px rgba(63,191,196,.14)}
+.ac-input.is-invalid{border-color:#ad3b37}
+.ac-portal .ac-input input{background:transparent;border:0;box-shadow:none;margin:0;padding:0;min-width:0;width:100%;height:53px;color:var(--ink);font-size:16px;outline:none}
+.ac-portal .ac-input input::placeholder{font-size:13px;color:#617b8c}
+.ac-show-password{background:none;border:0;display:grid;place-items:center;min-width:44px;min-height:44px;margin-right:-9px;padding:0;color:#526f83;border-radius:12px}
+.ac-show-password[aria-pressed="true"]{color:var(--brand);background:var(--p-teal)}
+.ac-field-error{font-size:12px;color:#a02e2a;margin:5px 0 0}
+.ac-field-error:empty{display:none}
+.ac-hint{display:block;min-height:28px;margin:-4px 0 19px;font-size:11px;color:var(--ink-2)}
+.ac-btn{width:100%;border:0;border-radius:17px;min-height:55px;padding:13px 21px;background:var(--brand);color:#fff!important;font-size:15px;font-weight:600;box-shadow:0 9px 17px rgba(11,79,126,.24),inset 0 3px 6px rgba(255,255,255,.25),inset 0 -5px 9px rgba(0,26,48,.26);display:flex;align-items:center;justify-content:center;gap:14px;transition:transform .2s var(--ease),box-shadow .2s}
+.ac-btn:hover{transform:translateY(-2px)}
+.ac-btn:active{transform:translateY(1px);box-shadow:inset 0 4px 9px rgba(0,26,48,.3)}
+.ac-btn .icon{width:19px;height:19px}
+.ac-status{font-size:12px;padding:12px;background:#FDE2DF;color:#8a2622;border-radius:12px;margin:0 0 18px}
+.ac-status[hidden]{display:none}
+.ac-card-bottom{margin:0 -36px;padding:14px 20px;background:#e2edf4;border-top:1px solid rgba(11,79,126,.06);display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;color:var(--ink-2)}
+.ac-card-bottom .icon{width:14px;height:14px;color:#1a8189}
+
+.ac-footer{display:flex;justify-content:space-between;gap:12px;color:var(--ink-2);font-size:10px;padding-top:18px;padding-bottom:24px;background:rgba(242,248,252,.85);border-radius:20px 20px 0 0}
+.ac-footer-dot{color:#227d88;margin:0 9px}
+
+@media(min-width:1500px){.ac-layout{max-width:1290px;gap:100px}.ac-card{padding-top:40px}.ac-welcome{padding-top:45px}}
+@media(max-width:1000px){.ac-layout{gap:30px;padding-inline:30px}.ac-card{padding:28px 25px 0}.ac-card-bottom{margin-inline:-25px}.ac-header,.ac-footer{padding-inline:30px}.ac-welcome-copy{font-size:12px}.ac-portal h1{font-size:32px}.ac-care-note{margin-left:0}}
+@media(max-width:760px){
+  .ac-bg{background-position:32% center}
+  .ac-header{padding:25px 24px 16px;background:rgba(242,248,252,.85)}.ac-logo{width:176px}.ac-portal-label{font-size:8px;letter-spacing:1px;gap:6px}
+  .ac-layout{display:flex;flex-direction:column;gap:24px;padding:12px 22px 30px;flex:initial;max-width:480px}
+  .ac-welcome{padding:0;align-self:auto;width:100%;text-align:center;align-items:center}
+  .ac-welcome::before{inset:-30px -12px auto;height:270px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.94) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%)}
+  .ac-eyebrow{font-size:10px;padding:5px 12px}.ac-portal h1{font-size:27px;margin:15px 0 8px;letter-spacing:-.5px}.ac-welcome-copy{font-size:11px}.ac-care-note{display:none}
+  .ac-card{width:100%;padding:26px 26px 0;border-radius:28px}.ac-card-bottom{margin-inline:-26px}
+  .ac-tile{width:49px;height:49px;border-radius:17px}.ac-tile .icon{width:25px;height:25px}
+  .ac-portal h2{font-size:27px;margin-top:17px}.ac-card-intro{font-size:13px;margin-bottom:22px}.ac-hint{font-size:10px}
+  .ac-footer{margin-top:auto;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:12px 16px 20px;font-size:9px}
+  .ac-b1{top:30%;width:95px;height:95px;right:-60px}.ac-b2{display:none}
+}
+@media(max-width:360px){.ac-header{padding-inline:18px}.ac-logo{width:150px}.ac-portal-label{font-size:7px}.ac-layout{padding-inline:14px}.ac-card{padding-inline:21px}.ac-card-bottom{margin-inline:-21px}.ac-portal h1{font-size:24px}.ac-hint{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.ac-portal *{animation:none!important;transition:none!important}}
+</style>
+{/literal}
+
+<div class="ac-portal">
+  <svg class="ac-icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="ac-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></symbol>
+    <symbol id="ac-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2"/></symbol>
+    <symbol id="ac-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="ac-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="ac-badge" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><circle cx="12" cy="9" r="2.5"/><path d="M8.5 16a3.5 3.5 0 0 1 7 0M9 3v2h6V3"/></symbol>
+  </defs></svg>
+  <div class="ac-bg" aria-hidden="true"></div>
+  <div class="ac-blob ac-b1" aria-hidden="true"></div>
+  <div class="ac-blob ac-b2" aria-hidden="true"></div>
+
+  <header class="ac-header">
+    <img class="ac-logo" src="/public/aikchol-logo.png" width="1000" height="267" alt="โรงพยาบาลเอกชล">
+    <span class="ac-portal-label"><span></span> AIKCHOL STAFF</span>
+  </header>
+
+  <main class="ac-layout">
+    <section class="ac-welcome" aria-labelledby="ac-welcome-title">
+      <span class="ac-eyebrow"><svg class="icon"><use href="#ac-lock" xlink:href="#ac-lock"/></svg> เครือข่ายสำหรับบุคลากร</span>
+      <h1 id="ac-welcome-title">ทำงานอย่างมั่นใจ<br><span>เชื่อมต่ออย่างปลอดภัย</span></h1>
+      <p class="ac-welcome-copy">พื้นที่เชื่อมต่อสำหรับทีมโรงพยาบาลเอกชล<br>เข้าถึงระบบงานและข้อมูลที่จำเป็นได้อย่างต่อเนื่อง</p>
+      <div class="ac-care-note ac-clay"><span class="ac-care-icon"><svg class="icon"><use href="#ac-badge" xlink:href="#ac-badge"/></svg></span><div><strong>สำหรับพนักงานเท่านั้น</strong><span>Authorized staff access.</span></div></div>
+    </section>
+
+    <section class="ac-card ac-clay" aria-labelledby="ac-login-title">
+      <div class="ac-card-heading"><span class="ac-tile"><svg class="icon"><use href="#ac-badge" xlink:href="#ac-badge"/></svg></span><span class="ac-mini-label">STAFF PORTAL</span></div>
+      <h2 id="ac-login-title">เข้าสู่ระบบพนักงาน</h2>
+      <p class="ac-card-intro">ยืนยันตัวตนเพื่อเข้าใช้งานเครือข่ายภายใน</p>
+
+      {* ClearPass จะประมวลผลฟอร์มนี้เอง: ฟิลด์ต้องชื่อ user และ password, POST กลับมาที่หน้าเดิม (คง query string ที่ controller ส่งมา) *}
+      <form id="ac-login-form" class="ac-form" method="post" action="{$smarty.server.REQUEST_URI|escape}" novalidate>
+        <p id="ac-status" class="ac-status" role="alert" hidden></p>
+
+        <div class="ac-field">
+          <label for="ac-user">รหัสพนักงาน <span>Employee ID</span></label>
+          <div class="ac-input"><svg class="icon"><use href="#ac-user" xlink:href="#ac-user"/></svg><input id="ac-user" name="user" autocomplete="username" placeholder="กรอกรหัสพนักงาน" required autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="ac-user-error"></div>
+          <p class="ac-field-error" id="ac-user-error"></p>
+        </div>
+
+        <div class="ac-field">
+          <label for="ac-password">รหัสผ่าน <span>Password</span></label>
+          <div class="ac-input"><svg class="icon"><use href="#ac-lock" xlink:href="#ac-lock"/></svg><input id="ac-password" name="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required aria-describedby="ac-password-error"><button class="ac-show-password" type="button" aria-label="แสดงรหัสผ่าน" aria-pressed="false"><svg class="icon"><use href="#ac-eye" xlink:href="#ac-eye"/></svg></button></div>
+          <p class="ac-field-error" id="ac-password-error"></p>
+        </div>
+
+        <span class="ac-hint">ใช้รหัสพนักงานและรหัสผ่านองค์กร</span>
+        <input type="hidden" name="submit" value="Log In">
+        <button class="ac-btn" id="ac-submit" type="submit"><span>เข้าสู่ระบบพนักงาน</span><svg class="icon"><use href="#ac-arrow" xlink:href="#ac-arrow"/></svg></button>
+      </form>
+
+      <div class="ac-card-bottom"><svg class="icon"><use href="#ac-lock" xlink:href="#ac-lock"/></svg><span>ระบบสำหรับบุคลากรที่ได้รับอนุญาตเท่านั้น</span></div>
+    </section>
+  </main>
+
+  <footer class="ac-footer"><span>© <span id="ac-year">2026</span> Aikchol Hospital. All rights reserved.</span><span>ระบบเครือข่ายภายใน <span class="ac-footer-dot">•</span> AIKCHOL STAFF</span></footer>
+</div>
+
+{literal}
+<script>
+(function () {
+  var form = document.getElementById('ac-login-form');
+  if (!form) return;
+  var user = document.getElementById('ac-user');
+  var pass = document.getElementById('ac-password');
+  var btn = document.getElementById('ac-submit');
+  var status = document.getElementById('ac-status');
+
+  // แสดง/ซ่อนรหัสผ่าน
+  document.querySelector('.ac-show-password').addEventListener('click', function () {
+    var visible = pass.type === 'password';
+    pass.type = visible ? 'text' : 'password';
+    this.setAttribute('aria-pressed', String(visible));
+    this.setAttribute('aria-label', visible ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+  });
+
+  function setError(input, msg) {
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    input.parentNode.classList.toggle('is-invalid', !!msg);
+    document.getElementById(input.id + '-error').textContent = msg || '';
+  }
+
+  function showStatus(msg) {
+    status.textContent = msg;
+    status.hidden = !msg;
+  }
+
+  // ข้อความ error ที่ ClearPass แสดงเอง (ถ้ามี) หรือที่ controller ส่งกลับมาใน ?errmsg=
+  var cpError = document.querySelector('.nwa_error, .errorMessage, .error');
+  var qsError = (location.search.match(/[?&]errmsg=([^&]*)/) || [])[1];
+  if (cpError && cpError.textContent.trim()) {
+    showStatus('เข้าสู่ระบบไม่สำเร็จ: ' + cpError.textContent.trim());
+    cpError.style.display = 'none';
+  } else if (qsError) {
+    showStatus('เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบรหัสพนักงานและรหัสผ่าน');
+  }
+
+  form.addEventListener('submit', function (event) {
+    var first = null;
+    user.value = user.value.trim();
+    setError(user, user.value ? '' : 'กรุณากรอกรหัสพนักงาน');
+    setError(pass, pass.value ? '' : 'กรุณากรอกรหัสผ่าน');
+    if (!user.value) first = user; else if (!pass.value) first = pass;
+    if (first) { event.preventDefault(); first.focus(); return; }
+    showStatus('');
+    btn.disabled = true; // กันกดซ้ำ
+    btn.querySelector('span').textContent = 'กำลังตรวจสอบ...';
+  });
+
+  [user, pass].forEach(function (input) {
+    input.addEventListener('input', function () { setError(input, ''); });
+  });
+
+  document.getElementById('ac-year').textContent = new Date().getFullYear();
+})();
+</script>
+{/literal}
