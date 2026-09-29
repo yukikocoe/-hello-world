@@ -1,0 +1,72 @@
+<!-- =====================================================================
+     วางทั้งหมดนี้ใน: Guest > Configuration > Pages > Web Logins > (เลือก Web Login)
+     ช่อง "Header HTML"
+
+     สำคัญ: หัวข้อ "Login Form" ต้องเป็นค่า Default (ห้ามติ๊ก
+     "Provide a custom login form") ฟอร์มของ ClearPass ต้องยังอยู่ในหน้า
+     เพราะมี action และ hidden fields ของ Aruba ที่ถูกต้อง CSS จะซ่อนมันไว้
+     แล้ว JS ใน Footer จะส่งค่าจากฟอร์มนี้ไปให้ฟอร์มนั้นเป็นคน submit
+     ===================================================================== -->
+
+<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="wifi" viewBox="0 0 24 24"><path d="M3 8a15 15 0 0 1 18 0M6 12a10 10 0 0 1 12 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="20" r="1"/></symbol>
+  <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></symbol>
+  <symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2"/></symbol>
+  <symbol id="eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+  <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+  <symbol id="heart" viewBox="0 0 24 24"><path d="M20 5c-3-3-6-1-8 1-2-2-5-4-8-1-4 4 0 9 8 15 8-6 12-11 8-15Z"/></symbol>
+</defs></svg>
+
+<div class="page-background" aria-hidden="true"></div>
+
+<header class="site-header">
+  <img class="logo" src="/guest/public/logo.png" width="1000" height="267" alt="โรงพยาบาลเอกชล">
+  <span class="portal-label"><span></span> AIKCHOL CONNECT</span>
+</header>
+
+<main class="layout">
+  <section class="welcome" aria-labelledby="welcome-title">
+    <span class="eyebrow"><svg class="icon"><use href="#wifi"/></svg> อยู่ใกล้กัน แม้ในโลกออนไลน์</span>
+    <h1 id="welcome-title" class="brand-h1">เชื่อมต่อทุกความห่วงใย<br><span>ให้ใกล้คุณยิ่งขึ้น</span></h1>
+    <p class="welcome-copy">ยินดีต้อนรับสู่ Wi-Fi โรงพยาบาลเอกชล<br>ให้คุณไม่พลาดการติดต่อกับคนสำคัญ ตลอดเวลาที่อยู่กับเรา</p>
+    <div class="care-note clay"><span class="care-icon"><svg class="icon"><use href="#heart"/></svg></span><div><strong>ดูแลด้วยใจ ใกล้คุณเสมอ</strong><span>Connected with care.</span></div></div>
+  </section>
+
+  <section class="login-card clay" aria-labelledby="login-title">
+    <div class="card-heading"><span class="wifi-tile"><svg class="icon"><use href="#wifi"/></svg></span><span class="mini-label">HOSPITAL WI-FI</span></div>
+    <h2 id="login-title" class="brand-h1">ยินดีต้อนรับ</h2>
+    <p class="card-intro">เข้าสู่ระบบเพื่อเชื่อมต่ออินเทอร์เน็ต</p>
+
+    <!-- ฟอร์มนี้เป็นแค่หน้าตา: ไม่ได้ส่งข้อมูลเอง (ไม่มี action)
+         ตอนกดเข้าสู่ระบบ JS ใน Footer จะก๊อป username/password ไปใส่
+         ฟอร์มจริงของ ClearPass ที่ซ่อนอยู่ แล้วกด submit ฟอร์มนั้น -->
+    <form id="login-form" autocomplete="on">
+      <div class="field">
+        <label for="ak-user">ชื่อผู้ใช้งาน <span>Username</span></label>
+        <div class="input-wrap"><svg class="icon"><use href="#user"/></svg>
+          <input id="ak-user" autocomplete="username" placeholder="กรอกชื่อผู้ใช้งาน" required autocapitalize="none" spellcheck="false">
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="ak-pass">รหัสผ่าน <span>Password</span></label>
+        <div class="input-wrap"><svg class="icon"><use href="#lock"/></svg>
+          <input id="ak-pass" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required>
+          <button class="show-password" type="button" aria-label="แสดงรหัสผ่าน" aria-pressed="false"><svg class="icon"><use href="#eye"/></svg></button>
+        </div>
+      </div>
+
+      <!-- แสดงเองอัตโนมัติ ถ้า Web Login เปิดใช้ Terms and Conditions -->
+      <label class="terms-row" id="ak-terms-row" hidden><input type="checkbox" id="ak-terms"><span id="ak-terms-text">ฉันยอมรับข้อกำหนดและเงื่อนไขการใช้งาน</span></label>
+
+      <div class="form-options"><span class="account-hint">ใช้บัญชีที่ได้รับจากโรงพยาบาล</span></div>
+
+      <button class="clay-btn" type="submit"><span>เข้าสู่ระบบ</span><svg class="icon"><use href="#arrow"/></svg></button>
+      <p class="form-status" id="ak-status" role="alert" hidden></p>
+    </form>
+
+    <!-- ถ้าเครื่องปิด JavaScript: ซ่อนฟอร์มสวย แล้วให้ฟอร์มเดิมของ ClearPass แสดงแทน -->
+    <noscript><style>#login-form{display:none!important}form:not(#login-form){display:block!important}</style></noscript>
+
+    <!-- ฟอร์ม Login ของ ClearPass จะถูกวางต่อจากตรงนี้ (ถูกซ่อนด้วย CSS)
+         </section> กับ </main> ยังเปิดค้างไว้ตั้งใจ — ไปปิดในกล่อง "Footer HTML" -->

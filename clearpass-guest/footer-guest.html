@@ -1,0 +1,114 @@
+{literal}
+<!-- =====================================================================
+     วางทั้งหมดนี้ใน: Guest > Configuration > Pages > Web Logins > Footer HTML
+     ===================================================================== -->
+
+    <div class="card-bottom"><svg class="icon"><use href="#heart"/></svg><span>อีกหนึ่งความใส่ใจ จากโรงพยาบาลเอกชล</span></div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <span>© <span id="year"></span> Aikchol Hospital. All rights reserved.</span>
+  <span>เชื่อมต่อด้วยความใส่ใจ <span class="footer-dot">•</span> AIKCHOL CONNECT</span>
+</footer>
+
+<script>
+(function () {
+  var ui = document.getElementById('login-form');
+  var uiUser = document.getElementById('ak-user');
+  var uiPass = document.getElementById('ak-pass');
+  var status = document.getElementById('ak-status');
+  var termsRow = document.getElementById('ak-terms-row');
+  var uiTerms = document.getElementById('ak-terms');
+  var submitBtn = ui.querySelector('.clay-btn');
+
+  function showStatus(msg) {
+    status.textContent = msg;
+    status.hidden = !msg;
+  }
+
+  // ฟอร์มจริงของ ClearPass = ฟอร์มอื่นที่ไม่ใช่ของเรา และมีช่อง password
+  function findNativeForm() {
+    for (var i = 0; i < document.forms.length; i++) {
+      var f = document.forms[i];
+      if (f !== ui && f.querySelector('input[type=password]')) return f;
+    }
+    return null;
+  }
+
+  function findUserInput(f) {
+    return f.querySelector('input[name=user]') ||
+           f.querySelector('input[name=username]') ||
+           f.querySelector('input[type=text], input[type=email], input:not([type])');
+  }
+
+  var nf = findNativeForm();
+
+  if (nf) {
+    // ถ้า Web Login เปิด Terms and Conditions ให้แสดง checkbox ในการ์ดของเราแทน
+    var nativeTerms = nf.querySelector('input[type=checkbox]');
+    if (nativeTerms) {
+      termsRow.hidden = false;
+      uiTerms.required = true;
+      uiTerms.checked = nativeTerms.checked;
+    }
+
+    // ข้อความ error ของ ClearPass (เช่น รหัสผ่านไม่ถูกต้อง) อยู่ในฟอร์มที่ถูกซ่อน
+    // ก๊อปมาแสดงในการ์ดของเรา
+    var errs = nf.querySelectorAll('[class*="error"], [class*="Error"]');
+    for (var i = 0; i < errs.length; i++) {
+      var t = (errs[i].textContent || '').replace(/\s+/g, ' ').trim();
+      if (t) { showStatus(t); break; }
+    }
+
+    // เติม username เดิมกลับมา (หลัง login ไม่ผ่าน ClearPass มักใส่ค่าเดิมไว้ให้)
+    var nu = findUserInput(nf);
+    if (nu && nu.value && !uiUser.value) uiUser.value = nu.value;
+  }
+
+  ui.addEventListener('submit', function (e) {
+    e.preventDefault();
+    nf = nf || findNativeForm();
+    if (!nf) {
+      showStatus('ไม่พบฟอร์ม Login ของระบบ กรุณาแจ้งเจ้าหน้าที่ไอที (ตั้ง Login Form ของ Web Login เป็น Default)');
+      return;
+    }
+    var nu = findUserInput(nf);
+    var np = nf.querySelector('input[type=password]');
+    if (nu) nu.value = uiUser.value.trim();
+    np.value = uiPass.value;
+
+    var nt = nf.querySelector('input[type=checkbox]');
+    if (nt) nt.checked = uiTerms.checked;
+
+    showStatus('');
+    submitBtn.disabled = true;
+    submitBtn.firstChild.textContent = 'กำลังเข้าสู่ระบบ…';
+
+    // กดปุ่ม submit ของฟอร์มจริง เพื่อให้ onsubmit เดิมของ ClearPass ทำงานครบ
+    var nbtn = nf.querySelector('[type=submit], input[type=image]');
+    if (nbtn) nbtn.click();
+    else if (nf.requestSubmit) nf.requestSubmit();
+    else nf.submit();
+
+    // เผื่อ submit ไม่ออก (เช่น validation ของฟอร์มจริงไม่ผ่าน) ให้กดใหม่ได้
+    setTimeout(function () {
+      submitBtn.disabled = false;
+      submitBtn.firstChild.textContent = 'เข้าสู่ระบบ';
+    }, 8000);
+  });
+
+  var toggle = document.querySelector('.show-password');
+  if (toggle) {
+    toggle.addEventListener('click', function () {
+      var visible = uiPass.type === 'password';
+      uiPass.type = visible ? 'text' : 'password';
+      this.setAttribute('aria-pressed', String(visible));
+    });
+  }
+
+  var y = document.getElementById('year');
+  if (y) y.textContent = new Date().getFullYear();
+})();
+</script>
+{/literal}
