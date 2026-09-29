@@ -1,94 +1,106 @@
-{* =====================================================================
-   วางทั้งไฟล์นี้ใน: Guest > Configuration > Pages > Skins > (เลือก skin)
-   แท็บ "CSS" หรือ "Custom CSS"
-   สำคัญ: ClearPass Guest ใช้ Smarty template engine พาร์สช่องนี้
-   ต้องห่อ CSS ทั้งหมดด้วย {literal}...{/literal} ไม่งั้น { } ของ CSS
-   จะถูกตีความเป็น Smarty tag แล้ว error เหมือนที่เจอในช่อง Footer
-   ===================================================================== *}
+/*
+  Aikchol Guest Wi-Fi — ClearPass Guest Web Login stylesheet
+  อัปโหลดไฟล์นี้ที่ Administration > Content Manager > Public Files
+  (ไฟล์เดียวกับ aikchol-logo.png, hospital-minimal-background.png, noto-sans-thai.ttf)
+  path ของรูป/ฟอนต์ในไฟล์นี้เป็นแบบ relative จึงไม่ต้องแก้ ถ้าอัปโหลดไว้ที่เดียวกัน
+*/
 {literal}
-/* ซ่อน heading "Login" ที่ Skin แสดงเองจากฟิลด์ Title ของ Web Login
-   ไม่รู้ว่า Skin ห่อ h1 นั้นไว้กี่ชั้น เลยไม่พึ่ง DOM position เลย —
-   mark เฉพาะ h1/h2 ของเราด้วย class="brand-h1" แล้วซ่อนตัวอื่นทั้งหมด
-   ที่ไม่ใช่ class นี้แทน (h1 ของเรา = #welcome-title ใส่ class ไว้แล้ว) */
-h1:not(.brand-h1),h2:not(.brand-h1){display:none!important}
-/* ล้าง default styling ของ container ระบบที่ ClearPass ห่อ content ของ
-   เราไว้ (เห็นจาก inspector: #topContainer #mainContainer #bottomContainer)
-   ไม่งั้นพื้นหลัง/padding/shadow ของมันจะทับดีไซน์เราและบัง blob วงกลม */
-/* ทำให้ div ที่ ClearPass ห่อ content ของเราไว้ "หายไป" จาก box layout
-   (เหมือนไม่มีอยู่เลย) แทนการ reset ทีละ property — ทำให้ header/main/
-   footer กลายเป็นลูกตรงของ body จริง sticky-footer (flex:1 ที่ main)
-   เลยกลับมาทำงาน ดันให้ footer ไปอยู่ล่างสุดของจอได้ */
-#topContainer,#mainContainer,#tdContent,#contentContainer,#content-marker{display:contents!important}
-#bottomContainer{display:none!important}
-/* เผื่อ Skin ใช้ id/class มาตรฐานของ Amigopod/ClearPass สำหรับ page title */
-#pageTitle,.page-title,#page-title,.pageTitle{display:none!important}
-:root{--brand:#0B4F7E;--brand-ink:#fff;--brand-2:#3FBFC4;--accent:#F5B335;--canvas:#E3EEF5;--surface:#F2F8FC;--surface-2:#D9E8F2;--p-blue:#CFE7F5;--p-teal:#C9ECEA;--p-amber:#FFE7B8;--ink:#123A52;--ink-2:#3E5C71;--in-l:rgba(255,255,255,.85);--in-d:rgba(11,79,126,.12);--sh-out:rgba(11,79,126,.14);--clay:0 16px 32px var(--sh-out),inset 0 -9px 18px var(--in-d),inset 0 7px 14px var(--in-l);--clay-sm:0 8px 18px var(--sh-out),inset 0 -6px 12px var(--in-d),inset 0 5px 10px var(--in-l);--cav:inset 0 4px 10px rgba(11,79,126,.10),inset 0 -3px 7px var(--in-l);--r2:20px;--r3:28px;--r4:34px;--pill:999px;--ease:cubic-bezier(.34,1.4,.44,1)}
-@font-face{font-family:'Noto Sans Thai';src:url('/guest/public/noto-sans-thai.ttf') format('truetype');font-weight:100 900;font-display:swap}
-*{box-sizing:border-box}
-html{min-height:100%}
-body{margin:0;color:var(--ink);background:var(--canvas) url('/guest/public/hospital-minimal-background.png') center center / cover no-repeat fixed;font-family:'Noto Sans Thai',Tahoma,system-ui,sans-serif!important;font-size:15px;line-height:1.7;min-height:100svh;display:flex;flex-direction:column;isolation:isolate}
-html body *{font-family:'Noto Sans Thai',Tahoma,system-ui,sans-serif!important}
-button,input{font:inherit}button{cursor:pointer}
-.icon-library{position:absolute;width:0;height:0;overflow:hidden}
-.icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
-.page-background{display:none}
-.site-header,.site-footer{width:min(1320px,100%);margin-inline:auto;padding-inline:48px}
-.site-header{display:flex;align-items:center;justify-content:space-between;padding-top:35px;padding-bottom:25px}
-.logo{width:225px;height:auto;display:block;filter:drop-shadow(0 2px 12px rgba(255,255,255,.9))}
-.portal-label{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:2px;font-weight:600;color:var(--brand)}
-.portal-label>span{width:7px;height:7px;border-radius:50%;background:var(--brand-2)}
-.layout{width:min(1192px,100%);margin:auto;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:64px;padding:30px 40px 48px;flex:1}
-.welcome{align-self:stretch;position:relative;display:flex;flex-direction:column;align-items:flex-start;padding-top:22px;padding-bottom:24px}
-.welcome::before{content:"";position:absolute;inset:-64px -30px auto -30px;height:420px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.92) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%);z-index:-1;pointer-events:none}
-.eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;background:rgba(242,248,252,.88);box-shadow:var(--clay-sm);border-radius:var(--pill);font-size:12px;font-weight:500}
-.eyebrow .icon{width:17px;height:17px;color:var(--brand)}
-h1{font-size:clamp(32px,3.25vw,46px);font-weight:700;line-height:1.48;letter-spacing:-1.1px;margin:25px 0 12px;text-shadow:0 1px 14px #fff,0 0 28px #fff}
-h1 span{color:#147e8c}
-.welcome-copy{font-size:14px;line-height:1.9;margin:0;color:var(--ink-2);text-shadow:0 1px 14px #fff,0 0 28px #fff}
-.clay{background:var(--surface);box-shadow:var(--clay);border-radius:var(--r4)}
-.care-note{margin-top:auto;display:flex;gap:13px;align-items:center;padding:14px 22px 14px 14px;border-radius:22px;background:rgba(242,248,252,.94);transform:rotate(-3deg);margin-left:30px}
-.care-note strong,.care-note div>span{display:block}
-.care-note strong{font-size:13px;font-weight:600}
-.care-note div>span{font-size:11px;color:var(--ink-2);letter-spacing:.4px}
-.care-icon{display:grid;place-items:center;width:43px;height:43px;border-radius:15px;background:var(--p-amber);color:var(--brand);box-shadow:var(--clay-sm)}
-.login-card{padding:35px 36px 0;border:1px solid rgba(255,255,255,.7);overflow:hidden;background:rgba(242,248,252,.98)}
-.card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
-.wifi-tile{width:58px;height:58px;display:grid;place-items:center;background:var(--p-teal);color:var(--brand);border-radius:20px;box-shadow:var(--clay-sm)}
-.wifi-tile .icon{width:28px;height:28px}
-.mini-label{font-size:10px;letter-spacing:2.2px;color:var(--ink-2)}
-h2{font-size:30px;line-height:1.5;margin:22px 0 3px;letter-spacing:-.5px;color:var(--ink)!important}
-.card-intro{margin:0 0 26px;font-size:14px;color:var(--ink-2)}
-.field{margin-bottom:18px}
-.field label{display:flex;gap:8px;align-items:baseline;font-size:13px;font-weight:600;margin-bottom:8px}
-.field label span{font-size:11px;font-weight:400;color:var(--ink-2)}
-.input-wrap{display:flex;align-items:center;gap:12px;padding:0 15px;min-height:55px;border-radius:16px;background:#e5eef4;box-shadow:var(--cav);border:1px solid transparent}
-.input-wrap>.icon{width:18px;height:18px;color:#526f83}
-.input-wrap:focus-within{border-color:#16858c;box-shadow:var(--cav),0 0 0 3px rgba(63,191,196,.14)}
-.input-wrap input{background:transparent;border:0;min-width:0;width:100%;height:53px;color:var(--ink);font-size:16px;outline:none}
-.input-wrap input::placeholder{font-size:13px;color:#617b8c}
-.show-password{background:none;border:0;display:grid;place-items:center;min-width:44px;min-height:44px;margin-right:-9px;color:#526f83;border-radius:12px}
-.show-password[aria-pressed="true"]{color:var(--brand);background:var(--p-teal)}
-.field-error{font-size:12px;color:#a02e2a;margin:5px 0 0}
-.field-error:empty{display:none}
-.form-options{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:-4px 0 19px;min-height:28px}
-.account-hint{font-size:11px;color:var(--ink-2)}
-.clay-btn{width:100%;border:0;border-radius:17px;min-height:55px;padding:13px 21px;background:var(--brand);color:#fff;font-size:15px;font-weight:600;box-shadow:0 9px 17px rgba(11,79,126,.24),inset 0 3px 6px rgba(255,255,255,.25),inset 0 -5px 9px rgba(0,26,48,.26);display:flex;align-items:center;justify-content:center;gap:14px}
-.clay-btn .icon{width:19px;height:19px}
-.card-bottom{margin:0 -36px;padding:14px 20px;background:#e7f1f5;border-top:1px solid rgba(11,79,126,.06);display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;color:var(--ink-2)}
-.card-bottom .icon{width:14px;height:14px;color:#1a8189}
-.site-footer{display:flex;justify-content:space-between;gap:12px;color:var(--ink-2);font-size:10px;padding-top:18px;padding-bottom:24px;background:rgba(242,248,252,.85);border-radius:20px 20px 0 0}
-.footer-dot{color:#227d88;margin:0 9px}
-.form-status,.noscript-note{font-size:12px;padding:12px;background:var(--p-amber);border-radius:12px;margin:18px 0 0}
-#login-form{padding-bottom:28px}
-/* ซ่อนฟอร์ม Login ของ ClearPass (กรอบ "Login" ที่เคยโผล่ในการ์ด)
-   ฟอร์มนี้ยังต้องมีอยู่ในหน้า เพราะมี action + hidden fields ของ Aruba ที่ถูกต้อง
-   ฟอร์มสวยของเรา (#login-form) จะก๊อปค่าไปใส่แล้วกด submit ฟอร์มนี้แทน (ดู JS ใน Footer) */
-form:not(#login-form){display:none!important}
-.terms-row{display:flex;gap:10px;align-items:flex-start;font-size:12px;color:var(--ink-2);margin:-4px 0 16px}
-.terms-row[hidden]{display:none}
-.terms-row input{width:18px;height:18px;margin-top:3px;accent-color:var(--brand)}
-.clay-btn[disabled]{opacity:.7;cursor:progress}
-@media(max-width:1000px){.layout{gap:30px;padding-inline:30px;grid-template-columns:1fr 1fr}.login-card{padding:28px 25px 0}.card-bottom{margin-inline:-25px}.site-header,.site-footer{padding-inline:30px}.welcome-copy{font-size:12px}h1{font-size:32px}.care-note{margin-left:0}}
-@media(max-width:760px){.site-header{padding:25px 24px 16px}.logo{width:176px}.layout{display:flex;flex-direction:column;gap:24px;padding:12px 22px 30px;flex:initial;max-width:480px}.welcome{padding:0;align-self:auto;width:100%;text-align:center;align-items:center}h1{font-size:27px;margin:15px 0 8px}.care-note{display:none}.login-card{width:100%;padding:26px 26px 0;border-radius:28px}.card-bottom{margin-inline:-26px}}
-@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+@font-face{font-family:'Noto Sans Thai';src:url('noto-sans-thai.ttf') format('truetype');font-weight:100 900;font-display:swap}
+html,body{margin:0;padding:0;background:#E3EEF5}
+.ac-portal{--brand:#0B4F7E;--brand-2:#3FBFC4;--p-blue:#CFE7F5;--p-teal:#C9ECEA;--p-amber:#FFE7B8;--surface:#F2F8FC;--ink:#123A52;--ink-2:#3E5C71;--in-l:rgba(255,255,255,.85);--in-d:rgba(11,79,126,.12);--sh-out:rgba(11,79,126,.14);--clay:0 16px 32px var(--sh-out),inset 0 -9px 18px var(--in-d),inset 0 7px 14px var(--in-l);--clay-sm:0 8px 18px var(--sh-out),inset 0 -6px 12px var(--in-d),inset 0 5px 10px var(--in-l);--cav:inset 0 4px 10px rgba(11,79,126,.10),inset 0 -3px 7px var(--in-l);--ease:cubic-bezier(.34,1.4,.44,1);
+  position:relative;isolation:isolate;min-height:100vh;min-height:100svh;display:flex;flex-direction:column;color:var(--ink);font-family:'Noto Sans Thai',Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.7;text-align:left}
+.ac-portal *,.ac-portal *::before,.ac-portal *::after{box-sizing:border-box}
+.ac-portal button,.ac-portal input{font:inherit;-webkit-tap-highlight-color:transparent}
+.ac-portal button{cursor:pointer;color:inherit}
+.ac-portal button:focus-visible,.ac-portal input:focus-visible{outline:3px solid #16858c;outline-offset:4px}
+.ac-portal button:disabled{cursor:wait;opacity:.85}
+.ac-portal h1,.ac-portal h2,.ac-portal p{padding:0;border:0;background:none;text-transform:none;font-family:inherit;color:inherit}
+.ac-icon-library{position:absolute;width:0;height:0;overflow:hidden}
+.ac-portal .icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ซ่อนข้อความ error เดิมของ ClearPass (สคริปต์ใน footer จะย้ายข้อความมาแสดงในการ์ดแทน) */
+.ac-cp-hidden{display:none!important}
+
+.ac-bg{position:fixed;inset:0;z-index:-3;background:#E3EEF5 url('hospital-minimal-background.png') center center/cover no-repeat}
+.ac-blob{position:fixed;pointer-events:none;z-index:-2;box-shadow:var(--clay);border-radius:50%;animation:ac-floaty 9s ease-in-out infinite alternate}
+.ac-b1{width:115px;height:115px;right:-65px;top:16%;background:var(--p-teal)}
+.ac-b2{width:45px;height:45px;right:7%;bottom:7%;background:var(--p-amber);animation-delay:-4s}
+@keyframes ac-floaty{to{transform:translateY(-14px)}}
+
+.ac-header,.ac-footer{width:min(1320px,100%);margin-inline:auto;padding-inline:48px}
+.ac-header{display:flex;align-items:center;justify-content:space-between;padding-top:35px;padding-bottom:25px}
+.ac-logo{width:225px;height:auto;display:block;filter:drop-shadow(0 2px 12px rgba(255,255,255,.9))}
+.ac-portal-label{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:2px;font-weight:600;color:var(--brand)}
+.ac-portal-label>span{width:7px;height:7px;border-radius:50%;background:var(--brand-2)}
+
+.ac-layout{width:min(1192px,100%);margin:auto;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:64px;padding:30px 40px 48px;flex:1}
+.ac-welcome{align-self:stretch;position:relative;display:flex;flex-direction:column;align-items:flex-start;padding-top:22px;padding-bottom:24px}
+.ac-welcome::before{content:"";position:absolute;inset:-64px -30px auto -30px;height:420px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.92) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%);z-index:-1;pointer-events:none}
+.ac-eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;background:rgba(227,238,245,.94);box-shadow:var(--clay-sm);border-radius:999px;font-size:12px;font-weight:500}
+.ac-eyebrow .icon{width:17px;height:17px;color:var(--brand)}
+.ac-portal h1{font-size:clamp(32px,3.25vw,46px);font-weight:700;line-height:1.48;letter-spacing:-1.1px;margin:25px 0 12px;position:relative;text-shadow:0 1px 14px #fff,0 0 28px #fff}
+.ac-portal h1 span{color:#147e8c}
+.ac-welcome-copy{font-size:14px;line-height:1.9;margin:0;color:var(--ink-2);position:relative;text-shadow:0 1px 14px #fff,0 0 28px #fff}
+
+.ac-clay{background:var(--surface);box-shadow:var(--clay);border-radius:34px}
+.ac-care-note{margin-top:auto;display:flex;gap:13px;align-items:center;padding:14px 22px 14px 14px;border-radius:22px;background:rgba(242,248,252,.94);transform:rotate(-3deg);margin-left:30px}
+.ac-care-note strong,.ac-care-note div>span{display:block}
+.ac-care-note strong{font-size:13px;font-weight:600}
+.ac-care-note div>span{font-size:11px;color:var(--ink-2);letter-spacing:.4px}
+.ac-care-icon,.ac-tile{display:grid;place-items:center;background:var(--p-blue);color:var(--brand);box-shadow:var(--clay-sm)}
+.ac-care-icon{width:43px;height:43px;border-radius:15px;background:var(--p-amber)}
+.ac-tile{background:var(--p-teal)}
+
+.ac-card{padding:35px 36px 0;border:1px solid rgba(255,255,255,.7);overflow:hidden;background:rgba(242,248,252,.97)}
+.ac-card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ac-tile{width:58px;height:58px;border-radius:20px}
+.ac-tile .icon{width:28px;height:28px}
+.ac-mini-label{font-size:10px;letter-spacing:2.2px;color:var(--ink-2)}
+.ac-portal h2{font-size:30px;font-weight:700;line-height:1.5;margin:22px 0 3px;letter-spacing:-.5px}
+.ac-card-intro{margin:0 0 26px;font-size:14px;color:var(--ink-2)}
+
+.ac-form{margin:0;padding-bottom:28px}
+.ac-field{margin-bottom:18px}
+.ac-field label{display:flex;gap:8px;align-items:baseline;font-size:13px;font-weight:600;margin-bottom:8px}
+.ac-field label span{font-size:11px;font-weight:400;color:var(--ink-2)}
+.ac-input{display:flex;align-items:center;gap:12px;padding:0 15px;min-height:55px;border-radius:16px;background:#e5eef4;box-shadow:var(--cav);border:1px solid transparent}
+.ac-input>.icon{width:18px;height:18px;color:#526f83}
+.ac-input:focus-within{border-color:#16858c;box-shadow:var(--cav),0 0 0 3px rgba(63,191,196,.14)}
+.ac-input.is-invalid{border-color:#ad3b37}
+.ac-portal .ac-input input{background:transparent;border:0;box-shadow:none;margin:0;padding:0;min-width:0;width:100%;height:53px;color:var(--ink);font-size:16px;outline:none}
+.ac-portal .ac-input input::placeholder{font-size:13px;color:#617b8c}
+.ac-show-password{background:none;border:0;display:grid;place-items:center;min-width:44px;min-height:44px;margin-right:-9px;padding:0;color:#526f83;border-radius:12px}
+.ac-show-password[aria-pressed="true"]{color:var(--brand);background:var(--p-teal)}
+.ac-field-error{font-size:12px;color:#a02e2a;margin:5px 0 0}
+.ac-field-error:empty{display:none}
+.ac-hint{display:block;min-height:28px;margin:-4px 0 19px;font-size:11px;color:var(--ink-2)}
+.ac-btn{width:100%;border:0;border-radius:17px;min-height:55px;padding:13px 21px;background:var(--brand);color:#fff!important;font-size:15px;font-weight:600;box-shadow:0 9px 17px rgba(11,79,126,.24),inset 0 3px 6px rgba(255,255,255,.25),inset 0 -5px 9px rgba(0,26,48,.26);display:flex;align-items:center;justify-content:center;gap:14px;transition:transform .2s var(--ease),box-shadow .2s}
+.ac-btn:hover{transform:translateY(-2px)}
+.ac-btn:active{transform:translateY(1px);box-shadow:inset 0 4px 9px rgba(0,26,48,.3)}
+.ac-btn .icon{width:19px;height:19px}
+.ac-status{font-size:12px;padding:12px;background:#FDE2DF;color:#8a2622;border-radius:12px;margin:0 0 18px}
+.ac-status[hidden]{display:none}
+.ac-card-bottom{margin:0 -36px;padding:14px 20px;background:#e2edf4;border-top:1px solid rgba(11,79,126,.06);display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;color:var(--ink-2)}
+.ac-card-bottom .icon{width:14px;height:14px;color:#1a8189}
+
+.ac-footer{display:flex;justify-content:space-between;gap:12px;color:var(--ink-2);font-size:10px;padding-top:18px;padding-bottom:24px;background:rgba(242,248,252,.85);border-radius:20px 20px 0 0}
+.ac-footer-dot{color:#227d88;margin:0 9px}
+
+@media(min-width:1500px){.ac-layout{max-width:1290px;gap:100px}.ac-card{padding-top:40px}.ac-welcome{padding-top:45px}}
+@media(max-width:1000px){.ac-layout{gap:30px;padding-inline:30px}.ac-card{padding:28px 25px 0}.ac-card-bottom{margin-inline:-25px}.ac-header,.ac-footer{padding-inline:30px}.ac-welcome-copy{font-size:12px}.ac-portal h1{font-size:32px}.ac-care-note{margin-left:0}}
+@media(max-width:760px){
+  .ac-bg{background-position:32% center}
+  .ac-header{padding:25px 24px 16px;background:rgba(242,248,252,.85)}.ac-logo{width:176px}.ac-portal-label{font-size:8px;letter-spacing:1px;gap:6px}
+  .ac-layout{display:flex;flex-direction:column;gap:24px;padding:12px 22px 30px;flex:initial;max-width:480px}
+  .ac-welcome{padding:0;align-self:auto;width:100%;text-align:center;align-items:center}
+  .ac-welcome::before{inset:-30px -12px auto;height:270px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.94) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%)}
+  .ac-eyebrow{font-size:10px;padding:5px 12px}.ac-portal h1{font-size:27px;margin:15px 0 8px;letter-spacing:-.5px}.ac-welcome-copy{font-size:11px}.ac-care-note{display:none}
+  .ac-card{width:100%;padding:26px 26px 0;border-radius:28px}.ac-card-bottom{margin-inline:-26px}
+  .ac-tile{width:49px;height:49px;border-radius:17px}.ac-tile .icon{width:25px;height:25px}
+  .ac-portal h2{font-size:27px;margin-top:17px}.ac-card-intro{font-size:13px;margin-bottom:22px}.ac-hint{font-size:10px}
+  .ac-footer{margin-top:auto;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:12px 16px 20px;font-size:9px}
+  .ac-b1{top:30%;width:95px;height:95px;right:-60px}.ac-b2{display:none}
+}
+@media(max-width:360px){.ac-header{padding-inline:18px}.ac-logo{width:150px}.ac-portal-label{font-size:7px}.ac-layout{padding-inline:14px}.ac-card{padding-inline:21px}.ac-card-bottom{margin-inline:-21px}.ac-portal h1{font-size:24px}.ac-hint{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.ac-portal *{animation:none!important;transition:none!important}}
 {/literal}

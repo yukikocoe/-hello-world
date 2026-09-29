@@ -1,114 +1,74 @@
+<!--
+  Aikchol Guest Wi-Fi — ClearPass Guest Web Login : FOOTER HTML
+  วางทั้งไฟล์นี้ในช่อง "Footer HTML" ของ Web Login page เดียวกัน
+  (สคริปต์ถูกครอบด้วยแท็ก literal ของ Smarty เพื่อไม่ให้ ClearPass ตีความวงเล็บปีกกา)
+-->
 {literal}
-<!-- =====================================================================
-     วางทั้งหมดนี้ใน: Guest > Configuration > Pages > Web Logins > Footer HTML
-     ===================================================================== -->
-
-    <div class="card-bottom"><svg class="icon"><use href="#heart"/></svg><span>อีกหนึ่งความใส่ใจ จากโรงพยาบาลเอกชล</span></div>
-  </section>
-</main>
-
-<footer class="site-footer">
-  <span>© <span id="year"></span> Aikchol Hospital. All rights reserved.</span>
-  <span>เชื่อมต่อด้วยความใส่ใจ <span class="footer-dot">•</span> AIKCHOL CONNECT</span>
-</footer>
-
 <script>
 (function () {
-  var ui = document.getElementById('login-form');
-  var uiUser = document.getElementById('ak-user');
-  var uiPass = document.getElementById('ak-pass');
-  var status = document.getElementById('ak-status');
-  var termsRow = document.getElementById('ak-terms-row');
-  var uiTerms = document.getElementById('ak-terms');
-  var submitBtn = ui.querySelector('.clay-btn');
+  var form = document.getElementById('ac-login-form');
+  if (!form) return;
+  var user = document.getElementById('ac-user');
+  var pass = document.getElementById('ac-password');
+  var btn = document.getElementById('ac-submit');
+  var status = document.getElementById('ac-status');
+
+  // แสดง/ซ่อนรหัสผ่าน
+  document.querySelector('.ac-show-password').addEventListener('click', function () {
+    var visible = pass.type === 'password';
+    pass.type = visible ? 'text' : 'password';
+    this.setAttribute('aria-pressed', String(visible));
+    this.setAttribute('aria-label', visible ? 'ซ่อนรหัสผ่าน' : 'แสดงรหัสผ่าน');
+  });
+
+  function setError(input, msg) {
+    input.setAttribute('aria-invalid', msg ? 'true' : 'false');
+    input.parentNode.classList.toggle('is-invalid', !!msg);
+    document.getElementById(input.id + '-error').textContent = msg || '';
+  }
 
   function showStatus(msg) {
     status.textContent = msg;
     status.hidden = !msg;
   }
 
-  // ฟอร์มจริงของ ClearPass = ฟอร์มอื่นที่ไม่ใช่ของเรา และมีช่อง password
-  function findNativeForm() {
-    for (var i = 0; i < document.forms.length; i++) {
-      var f = document.forms[i];
-      if (f !== ui && f.querySelector('input[type=password]')) return f;
-    }
-    return null;
+  // ย้ายข้อความ error ที่ ClearPass แสดงเอง (อยู่นอกดีไซน์) มาแสดงในการ์ด
+  var cpError = null;
+  var candidates = document.querySelectorAll('.nwaError, .nwa_error, .errorMessage, .error, #errmsg');
+  for (var i = 0; i < candidates.length; i++) {
+    if (!candidates[i].closest('.ac-portal') && candidates[i].textContent.trim()) { cpError = candidates[i]; break; }
+  }
+  var qsError = (location.search.match(/[?&]errmsg=([^&]*)/) || [])[1];
+  if (cpError) {
+    showStatus('เข้าสู่ระบบไม่สำเร็จ: ' + cpError.textContent.trim());
+    cpError.classList.add('ac-cp-hidden');
+  } else if (qsError) {
+    showStatus('เข้าสู่ระบบไม่สำเร็จ กรุณาตรวจสอบชื่อผู้ใช้งานและรหัสผ่าน');
   }
 
-  function findUserInput(f) {
-    return f.querySelector('input[name=user]') ||
-           f.querySelector('input[name=username]') ||
-           f.querySelector('input[type=text], input[type=email], input:not([type])');
-  }
-
-  var nf = findNativeForm();
-
-  if (nf) {
-    // ถ้า Web Login เปิด Terms and Conditions ให้แสดง checkbox ในการ์ดของเราแทน
-    var nativeTerms = nf.querySelector('input[type=checkbox]');
-    if (nativeTerms) {
-      termsRow.hidden = false;
-      uiTerms.required = true;
-      uiTerms.checked = nativeTerms.checked;
-    }
-
-    // ข้อความ error ของ ClearPass (เช่น รหัสผ่านไม่ถูกต้อง) อยู่ในฟอร์มที่ถูกซ่อน
-    // ก๊อปมาแสดงในการ์ดของเรา
-    var errs = nf.querySelectorAll('[class*="error"], [class*="Error"]');
-    for (var i = 0; i < errs.length; i++) {
-      var t = (errs[i].textContent || '').replace(/\s+/g, ' ').trim();
-      if (t) { showStatus(t); break; }
-    }
-
-    // เติม username เดิมกลับมา (หลัง login ไม่ผ่าน ClearPass มักใส่ค่าเดิมไว้ให้)
-    var nu = findUserInput(nf);
-    if (nu && nu.value && !uiUser.value) uiUser.value = nu.value;
-  }
-
-  ui.addEventListener('submit', function (e) {
-    e.preventDefault();
-    nf = nf || findNativeForm();
-    if (!nf) {
-      showStatus('ไม่พบฟอร์ม Login ของระบบ กรุณาแจ้งเจ้าหน้าที่ไอที (ตั้ง Login Form ของ Web Login เป็น Default)');
-      return;
-    }
-    var nu = findUserInput(nf);
-    var np = nf.querySelector('input[type=password]');
-    if (nu) nu.value = uiUser.value.trim();
-    np.value = uiPass.value;
-
-    var nt = nf.querySelector('input[type=checkbox]');
-    if (nt) nt.checked = uiTerms.checked;
-
+  form.addEventListener('submit', function (event) {
+    var first = null;
+    user.value = user.value.trim();
+    setError(user, user.value ? '' : 'กรุณากรอกชื่อผู้ใช้งาน');
+    setError(pass, pass.value ? '' : 'กรุณากรอกรหัสผ่าน');
+    if (!user.value) first = user; else if (!pass.value) first = pass;
+    if (first) { event.preventDefault(); first.focus(); return; }
     showStatus('');
-    submitBtn.disabled = true;
-    submitBtn.firstChild.textContent = 'กำลังเข้าสู่ระบบ…';
-
-    // กดปุ่ม submit ของฟอร์มจริง เพื่อให้ onsubmit เดิมของ ClearPass ทำงานครบ
-    var nbtn = nf.querySelector('[type=submit], input[type=image]');
-    if (nbtn) nbtn.click();
-    else if (nf.requestSubmit) nf.requestSubmit();
-    else nf.submit();
-
-    // เผื่อ submit ไม่ออก (เช่น validation ของฟอร์มจริงไม่ผ่าน) ให้กดใหม่ได้
-    setTimeout(function () {
-      submitBtn.disabled = false;
-      submitBtn.firstChild.textContent = 'เข้าสู่ระบบ';
-    }, 8000);
+    btn.disabled = true; // กันกดซ้ำ (ค่า submit ส่งผ่าน hidden input แล้ว)
+    btn.querySelector('span').textContent = 'กำลังตรวจสอบ...';
   });
 
-  var toggle = document.querySelector('.show-password');
-  if (toggle) {
-    toggle.addEventListener('click', function () {
-      var visible = uiPass.type === 'password';
-      uiPass.type = visible ? 'text' : 'password';
-      this.setAttribute('aria-pressed', String(visible));
-    });
-  }
+  // ถ้าผู้ใช้กด Back กลับมา ให้ปุ่มกลับมากดได้
+  window.addEventListener('pageshow', function () {
+    btn.disabled = false;
+    btn.querySelector('span').textContent = 'เข้าสู่ระบบ';
+  });
 
-  var y = document.getElementById('year');
-  if (y) y.textContent = new Date().getFullYear();
+  [user, pass].forEach(function (input) {
+    input.addEventListener('input', function () { setError(input, ''); });
+  });
+
+  document.getElementById('ac-year').textContent = new Date().getFullYear();
 })();
 </script>
 {/literal}

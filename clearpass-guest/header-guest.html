@@ -1,74 +1,186 @@
+<!--
+  Aikchol Guest Wi-Fi — ClearPass Guest Web Login : HEADER HTML
+  วางทั้งไฟล์นี้ในช่อง "Header HTML" ของ Web Login page ได้เลย
+  โลโก้และ CSS ฝังอยู่ในไฟล์นี้แล้ว
+  รูปพื้นหลัง: อัปโหลด hospital-minimal-background.png ไว้ที่ Administration > Content Manager > Public Files
+  ตั้งค่า: Custom Form = Provide a custom login form, Skin = Blank Skin
+  ฟอนต์ Noto Sans Thai ไม่บังคับ: ถ้าอัปโหลด noto-sans-thai.ttf ไว้ที่ /public/ จะใช้ฟอนต์นั้น ไม่งั้นใช้ Tahoma
+-->
 {literal}
-<!-- =====================================================================
-     วางทั้งหมดนี้ใน: Guest > Configuration > Pages > Web Logins > (เลือก Web Login)
-     ช่อง "Header HTML"
-
-     สำคัญ: หัวข้อ "Login Form" ต้องเป็นค่า Default (ห้ามติ๊ก
-     "Provide a custom login form") ฟอร์มของ ClearPass ต้องยังอยู่ในหน้า
-     เพราะมี action และ hidden fields ของ Aruba ที่ถูกต้อง CSS จะซ่อนมันไว้
-     แล้ว JS ใน Footer จะส่งค่าจากฟอร์มนี้ไปให้ฟอร์มนั้นเป็นคน submit
-     ===================================================================== -->
-
-<svg class="icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
-  <symbol id="wifi" viewBox="0 0 24 24"><path d="M3 8a15 15 0 0 1 18 0M6 12a10 10 0 0 1 12 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="20" r="1"/></symbol>
-  <symbol id="user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></symbol>
-  <symbol id="lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2"/></symbol>
-  <symbol id="eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
-  <symbol id="arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
-  <symbol id="heart" viewBox="0 0 24 24"><path d="M20 5c-3-3-6-1-8 1-2-2-5-4-8-1-4 4 0 9 8 15 8-6 12-11 8-15Z"/></symbol>
-</defs></svg>
-
-<div class="page-background" aria-hidden="true"></div>
-
-<header class="site-header">
-  <img class="logo" src="/guest/public/logo.png" width="1000" height="267" alt="โรงพยาบาลเอกชล">
-  <span class="portal-label"><span></span> AIKCHOL CONNECT</span>
-</header>
-
-<main class="layout">
-  <section class="welcome" aria-labelledby="welcome-title">
-    <span class="eyebrow"><svg class="icon"><use href="#wifi"/></svg> อยู่ใกล้กัน แม้ในโลกออนไลน์</span>
-    <h1 id="welcome-title" class="brand-h1">เชื่อมต่อทุกความห่วงใย<br><span>ให้ใกล้คุณยิ่งขึ้น</span></h1>
-    <p class="welcome-copy">ยินดีต้อนรับสู่ Wi-Fi โรงพยาบาลเอกชล<br>ให้คุณไม่พลาดการติดต่อกับคนสำคัญ ตลอดเวลาที่อยู่กับเรา</p>
-    <div class="care-note clay"><span class="care-icon"><svg class="icon"><use href="#heart"/></svg></span><div><strong>ดูแลด้วยใจ ใกล้คุณเสมอ</strong><span>Connected with care.</span></div></div>
-  </section>
-
-  <section class="login-card clay" aria-labelledby="login-title">
-    <div class="card-heading"><span class="wifi-tile"><svg class="icon"><use href="#wifi"/></svg></span><span class="mini-label">HOSPITAL WI-FI</span></div>
-    <h2 id="login-title" class="brand-h1">ยินดีต้อนรับ</h2>
-    <p class="card-intro">เข้าสู่ระบบเพื่อเชื่อมต่ออินเทอร์เน็ต</p>
-
-    <!-- ฟอร์มนี้เป็นแค่หน้าตา: ไม่ได้ส่งข้อมูลเอง (ไม่มี action)
-         ตอนกดเข้าสู่ระบบ JS ใน Footer จะก๊อป username/password ไปใส่
-         ฟอร์มจริงของ ClearPass ที่ซ่อนอยู่ แล้วกด submit ฟอร์มนั้น -->
-    <form id="login-form" autocomplete="on">
-      <div class="field">
-        <label for="ak-user">ชื่อผู้ใช้งาน <span>Username</span></label>
-        <div class="input-wrap"><svg class="icon"><use href="#user"/></svg>
-          <input id="ak-user" autocomplete="username" placeholder="กรอกชื่อผู้ใช้งาน" required autocapitalize="none" spellcheck="false">
-        </div>
-      </div>
-
-      <div class="field">
-        <label for="ak-pass">รหัสผ่าน <span>Password</span></label>
-        <div class="input-wrap"><svg class="icon"><use href="#lock"/></svg>
-          <input id="ak-pass" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required>
-          <button class="show-password" type="button" aria-label="แสดงรหัสผ่าน" aria-pressed="false"><svg class="icon"><use href="#eye"/></svg></button>
-        </div>
-      </div>
-
-      <!-- แสดงเองอัตโนมัติ ถ้า Web Login เปิดใช้ Terms and Conditions -->
-      <label class="terms-row" id="ak-terms-row" hidden><input type="checkbox" id="ak-terms"><span id="ak-terms-text">ฉันยอมรับข้อกำหนดและเงื่อนไขการใช้งาน</span></label>
-
-      <div class="form-options"><span class="account-hint">ใช้บัญชีที่ได้รับจากโรงพยาบาล</span></div>
-
-      <button class="clay-btn" type="submit"><span>เข้าสู่ระบบ</span><svg class="icon"><use href="#arrow"/></svg></button>
-      <p class="form-status" id="ak-status" role="alert" hidden></p>
-    </form>
-
-    <!-- ถ้าเครื่องปิด JavaScript: ซ่อนฟอร์มสวย แล้วให้ฟอร์มเดิมของ ClearPass แสดงแทน -->
-    <noscript><style>#login-form{display:none!important}form:not(#login-form){display:block!important}</style></noscript>
-
-    <!-- ฟอร์ม Login ของ ClearPass จะถูกวางต่อจากตรงนี้ (ถูกซ่อนด้วย CSS)
-         </section> กับ </main> ยังเปิดค้างไว้ตั้งใจ — ไปปิดในกล่อง "Footer HTML" -->
+<script>
+/* เพิ่ม viewport meta ให้มือถือ (Blank Skin บางเวอร์ชันไม่มีให้) */
+(function () {
+  if (!document.querySelector('meta[name="viewport"]')) {
+    var m = document.createElement('meta');
+    m.name = 'viewport';
+    m.content = 'width=device-width, initial-scale=1';
+    document.head.appendChild(m);
+  }
+})();
+</script>
 {/literal}
+{literal}
+<style>
+@font-face{font-family:'Noto Sans Thai';src:local('Noto Sans Thai'),url('/public/noto-sans-thai.ttf') format('truetype'),url('/public/NotoSansThai-VariableFont_wdth,wght.ttf') format('truetype'),url('/public/NotoSansThai-Regular.ttf') format('truetype'),url('/public/NotoSansThai.ttf') format('truetype'),url('/guest/public/noto-sans-thai.ttf') format('truetype'),url('/guest/public/NotoSansThai-VariableFont_wdth,wght.ttf') format('truetype'),url('/guest/public/NotoSansThai-Regular.ttf') format('truetype'),url('/guest/public/NotoSansThai.ttf') format('truetype');font-weight:100 900;font-display:swap}
+html,body{margin:0;padding:0;background:#E3EEF5;height:100%;overflow:hidden}
+/* ซ่อนส่วนเกินของ skin ClearPass ที่ทำให้มีช่องว่างใต้หน้า */
+#topContainer,.skiplinks,#footerContainer,#footer,.nwaFooter{display:none!important}
+.ac-portal{--brand:#0B4F7E;--brand-2:#3FBFC4;--p-blue:#CFE7F5;--p-teal:#C9ECEA;--p-amber:#FFE7B8;--surface:#F2F8FC;--ink:#123A52;--ink-2:#3E5C71;--in-l:rgba(255,255,255,.85);--in-d:rgba(11,79,126,.12);--sh-out:rgba(11,79,126,.14);--clay:0 16px 32px var(--sh-out),inset 0 -9px 18px var(--in-d),inset 0 7px 14px var(--in-l);--clay-sm:0 8px 18px var(--sh-out),inset 0 -6px 12px var(--in-d),inset 0 5px 10px var(--in-l);--cav:inset 0 4px 10px rgba(11,79,126,.10),inset 0 -3px 7px var(--in-l);--ease:cubic-bezier(.34,1.4,.44,1);
+  position:fixed;inset:0;z-index:9999;overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;isolation:isolate;display:flex;flex-direction:column;color:var(--ink);font-family:'Noto Sans Thai',Tahoma,system-ui,sans-serif;font-size:15px;line-height:1.7;text-align:left}
+.ac-portal *,.ac-portal *::before,.ac-portal *::after{box-sizing:border-box}
+.ac-portal button,.ac-portal input{font:inherit;-webkit-tap-highlight-color:transparent}
+.ac-portal button{cursor:pointer;color:inherit}
+.ac-portal button:focus-visible,.ac-portal input:focus-visible{outline:3px solid #16858c;outline-offset:4px}
+.ac-portal button:disabled{cursor:wait;opacity:.85}
+.ac-portal h1,.ac-portal h2,.ac-portal p{padding:0;border:0;background:none;text-transform:none;font-family:inherit;color:inherit}
+.ac-icon-library{position:absolute;width:0;height:0;overflow:hidden}
+.ac-portal .icon{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+/* ซ่อนข้อความ error เดิมของ ClearPass (สคริปต์ใน footer จะย้ายข้อความมาแสดงในการ์ดแทน) */
+.ac-cp-hidden{display:none!important}
+
+.ac-bg{position:fixed;inset:0;z-index:-3;background:url('/guest/public/hospital-minimal-background.png') center center/cover no-repeat,url('/public/hospital-minimal-background.png') center center/cover no-repeat,#E3EEF5}
+.ac-blob{position:fixed;pointer-events:none;z-index:-2;box-shadow:var(--clay);border-radius:50%;animation:ac-floaty 9s ease-in-out infinite alternate}
+.ac-b1{width:115px;height:115px;right:-65px;top:16%;background:var(--p-teal)}
+.ac-b2{width:45px;height:45px;right:7%;bottom:7%;background:var(--p-amber);animation-delay:-4s}
+@keyframes ac-floaty{to{transform:translateY(-14px)}}
+
+.ac-header,.ac-footer{width:min(1320px,100%);margin-inline:auto;padding-inline:48px}
+.ac-header{display:flex;align-items:center;justify-content:space-between;padding-top:35px;padding-bottom:25px}
+.ac-logo{width:225px;height:auto;display:block;filter:drop-shadow(0 2px 12px rgba(255,255,255,.9))}
+.ac-portal-label{display:flex;align-items:center;gap:9px;font-size:11px;letter-spacing:2px;font-weight:600;color:var(--brand)}
+.ac-portal-label>span{width:7px;height:7px;border-radius:50%;background:var(--brand-2)}
+
+.ac-layout{width:min(1192px,100%);margin:auto;display:grid;grid-template-columns:1.2fr 1fr;align-items:center;gap:64px;padding:30px 40px 48px;flex:1}
+.ac-welcome{align-self:stretch;position:relative;display:flex;flex-direction:column;align-items:flex-start;padding-top:22px;padding-bottom:24px}
+.ac-welcome::before{content:"";position:absolute;inset:-64px -30px auto -30px;height:420px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.92) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%);z-index:-1;pointer-events:none}
+.ac-eyebrow{display:inline-flex;align-items:center;gap:9px;padding:7px 15px;background:rgba(227,238,245,.94);box-shadow:var(--clay-sm);border-radius:999px;font-size:12px;font-weight:500}
+.ac-eyebrow .icon{width:17px;height:17px;color:var(--brand)}
+.ac-portal h1{font-size:clamp(32px,3.25vw,46px);font-weight:700;line-height:1.48;letter-spacing:-1.1px;margin:25px 0 12px;position:relative;text-shadow:0 1px 14px #fff,0 0 28px #fff}
+.ac-portal h1 span{color:#147e8c}
+.ac-welcome-copy{font-size:14px;line-height:1.9;margin:0;color:var(--ink-2);position:relative;text-shadow:0 1px 14px #fff,0 0 28px #fff}
+
+.ac-clay{background:var(--surface);box-shadow:var(--clay);border-radius:34px}
+.ac-care-note{margin-top:auto;display:flex;gap:13px;align-items:center;padding:14px 22px 14px 14px;border-radius:22px;background:rgba(242,248,252,.94);transform:rotate(-3deg);margin-left:30px}
+.ac-care-note strong,.ac-care-note div>span{display:block}
+.ac-care-note strong{font-size:13px;font-weight:600}
+.ac-care-note div>span{font-size:11px;color:var(--ink-2);letter-spacing:.4px}
+.ac-care-icon,.ac-tile{display:grid;place-items:center;background:var(--p-blue);color:var(--brand);box-shadow:var(--clay-sm)}
+.ac-care-icon{width:43px;height:43px;border-radius:15px;background:var(--p-amber)}
+.ac-tile{background:var(--p-teal)}
+
+.ac-card{padding:35px 36px 0;border:1px solid rgba(255,255,255,.7);overflow:hidden;background:rgba(242,248,252,.97)}
+.ac-card-heading{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.ac-tile{width:58px;height:58px;border-radius:20px}
+.ac-tile .icon{width:28px;height:28px}
+.ac-mini-label{font-size:10px;letter-spacing:2.2px;color:var(--ink-2)}
+.ac-portal h2{font-size:30px;font-weight:700;line-height:1.5;margin:22px 0 3px;letter-spacing:-.5px}
+.ac-card-intro{margin:0 0 26px;font-size:14px;color:var(--ink-2)}
+
+.ac-form{margin:0;padding-bottom:28px}
+.ac-field{margin-bottom:18px}
+.ac-field label{display:flex;gap:8px;align-items:baseline;font-size:13px;font-weight:600;margin-bottom:8px}
+.ac-field label span{font-size:11px;font-weight:400;color:var(--ink-2)}
+.ac-input{display:flex;align-items:center;gap:12px;padding:0 15px;min-height:55px;border-radius:16px;background:#e5eef4;box-shadow:var(--cav);border:1px solid transparent}
+.ac-input>.icon{width:18px;height:18px;color:#526f83}
+.ac-input:focus-within{border-color:#16858c;box-shadow:var(--cav),0 0 0 3px rgba(63,191,196,.14)}
+.ac-input.is-invalid{border-color:#ad3b37}
+.ac-portal .ac-input input{background:transparent;border:0;box-shadow:none;margin:0;padding:0;min-width:0;width:100%;height:53px;color:var(--ink);font-size:16px;outline:none}
+.ac-portal .ac-input input::placeholder{font-size:13px;color:#617b8c}
+.ac-show-password{background:none;border:0;display:grid;place-items:center;min-width:44px;min-height:44px;margin-right:-9px;padding:0;color:#526f83;border-radius:12px}
+.ac-show-password[aria-pressed="true"]{color:var(--brand);background:var(--p-teal)}
+.ac-field-error{font-size:12px;color:#a02e2a;margin:5px 0 0}
+.ac-field-error:empty{display:none}
+.ac-hint{display:block;min-height:28px;margin:-4px 0 19px;font-size:11px;color:var(--ink-2)}
+.ac-btn{width:100%;border:0;border-radius:17px;min-height:55px;padding:13px 21px;background:var(--brand);color:#fff!important;font-size:15px;font-weight:600;box-shadow:0 9px 17px rgba(11,79,126,.24),inset 0 3px 6px rgba(255,255,255,.25),inset 0 -5px 9px rgba(0,26,48,.26);display:flex;align-items:center;justify-content:center;gap:14px;transition:transform .2s var(--ease),box-shadow .2s}
+.ac-btn:hover{transform:translateY(-2px)}
+.ac-btn:active{transform:translateY(1px);box-shadow:inset 0 4px 9px rgba(0,26,48,.3)}
+.ac-btn .icon{width:19px;height:19px}
+.ac-status{font-size:12px;padding:12px;background:#FDE2DF;color:#8a2622;border-radius:12px;margin:0 0 18px}
+.ac-status[hidden]{display:none}
+.ac-card-bottom{margin:0 -36px;padding:14px 20px;background:#e2edf4;border-top:1px solid rgba(11,79,126,.06);display:flex;align-items:center;justify-content:center;gap:8px;font-size:10px;color:var(--ink-2)}
+.ac-card-bottom .icon{width:14px;height:14px;color:#1a8189}
+
+.ac-footer{display:flex;justify-content:space-between;gap:12px;color:var(--ink-2);font-size:10px;padding-top:18px;padding-bottom:24px;background:rgba(242,248,252,.85);border-radius:20px 20px 0 0}
+.ac-footer-dot{color:#227d88;margin:0 9px}
+
+@media(min-width:1500px){.ac-layout{max-width:1290px;gap:100px}.ac-card{padding-top:40px}.ac-welcome{padding-top:45px}}
+@media(max-width:1000px){.ac-layout{gap:30px;padding-inline:30px}.ac-card{padding:28px 25px 0}.ac-card-bottom{margin-inline:-25px}.ac-header,.ac-footer{padding-inline:30px}.ac-welcome-copy{font-size:12px}.ac-portal h1{font-size:32px}.ac-care-note{margin-left:0}}
+@media(max-width:760px){
+  .ac-bg{background-position:32% center}
+  .ac-header{padding:25px 24px 16px;background:rgba(242,248,252,.85)}.ac-logo{width:176px}.ac-portal-label{font-size:8px;letter-spacing:1px;gap:6px}
+  .ac-layout{display:flex;flex-direction:column;gap:24px;padding:12px 22px 30px;flex:initial;max-width:480px}
+  .ac-welcome{padding:0;align-self:auto;width:100%;text-align:center;align-items:center}
+  .ac-welcome::before{inset:-30px -12px auto;height:270px;background:radial-gradient(ellipse closest-side at center,rgba(242,248,252,.94) 0%,rgba(242,248,252,.72) 40%,rgba(242,248,252,.3) 70%,rgba(242,248,252,0) 100%)}
+  .ac-eyebrow{font-size:10px;padding:5px 12px}.ac-portal h1{font-size:27px;margin:15px 0 8px;letter-spacing:-.5px}.ac-welcome-copy{font-size:11px}.ac-care-note{display:none}
+  .ac-card{width:100%;padding:26px 26px 0;border-radius:28px}.ac-card-bottom{margin-inline:-26px}
+  .ac-tile{width:49px;height:49px;border-radius:17px}.ac-tile .icon{width:25px;height:25px}
+  .ac-portal h2{font-size:27px;margin-top:17px}.ac-card-intro{font-size:13px;margin-bottom:22px}.ac-hint{font-size:10px}
+  .ac-footer{margin-top:auto;flex-direction:column;align-items:center;text-align:center;gap:3px;padding:12px 16px 20px;font-size:9px}
+  .ac-b1{top:30%;width:95px;height:95px;right:-60px}.ac-b2{display:none}
+}
+@media(max-width:360px){.ac-header{padding-inline:18px}.ac-logo{width:150px}.ac-portal-label{font-size:7px}.ac-layout{padding-inline:14px}.ac-card{padding-inline:21px}.ac-card-bottom{margin-inline:-21px}.ac-portal h1{font-size:24px}.ac-hint{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.ac-portal *{animation:none!important;transition:none!important}}
+</style>
+{/literal}
+
+<div class="ac-portal">
+  <svg class="ac-icon-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+    <symbol id="ac-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/></symbol>
+    <symbol id="ac-lock" viewBox="0 0 24 24"><rect x="5" y="10" width="14" height="11" rx="3"/><path d="M8 10V7a4 4 0 0 1 8 0v3M12 15v2"/></symbol>
+    <symbol id="ac-eye" viewBox="0 0 24 24"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/></symbol>
+    <symbol id="ac-arrow" viewBox="0 0 24 24"><path d="M4 12h16m-6-6 6 6-6 6"/></symbol>
+    <symbol id="ac-wifi" viewBox="0 0 24 24"><path d="M3 8a15 15 0 0 1 18 0M6 12a10 10 0 0 1 12 0M9 16a5 5 0 0 1 6 0"/><circle cx="12" cy="20" r="1"/></symbol>
+    <symbol id="ac-heart" viewBox="0 0 24 24"><path d="M20 5c-3-3-6-1-8 1-2-2-5-4-8-1-4 4 0 9 8 15 8-6 12-11 8-15Z"/></symbol>
+    <symbol id="ac-badge" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="3"/><circle cx="12" cy="9" r="2.5"/><path d="M8.5 16a3.5 3.5 0 0 1 7 0M9 3v2h6V3"/></symbol>
+  </defs></svg>
+  <div class="ac-bg" aria-hidden="true"></div>
+  <div class="ac-blob ac-b1" aria-hidden="true"></div>
+  <div class="ac-blob ac-b2" aria-hidden="true"></div>
+
+  <header class="ac-header">
+    <img class="ac-logo" src="data:image/png;base64,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" width="500" height="135" alt="โรงพยาบาลเอกชล">
+    <span class="ac-portal-label"><span></span> AIKCHOL CONNECT</span>
+  </header>
+
+  <main class="ac-layout">
+    <section class="ac-welcome" aria-labelledby="ac-welcome-title">
+      <span class="ac-eyebrow"><svg class="icon"><use href="#ac-wifi" xlink:href="#ac-wifi"/></svg> อยู่ใกล้กัน แม้ในโลกออนไลน์</span>
+      <h1 id="ac-welcome-title">เชื่อมต่อทุกความห่วงใย<br><span>ให้ใกล้คุณยิ่งขึ้น</span></h1>
+      <p class="ac-welcome-copy">ยินดีต้อนรับสู่ Wi-Fi โรงพยาบาลเอกชล<br>ให้คุณไม่พลาดการติดต่อกับคนสำคัญ ตลอดเวลาที่อยู่กับเรา</p>
+      <div class="ac-care-note ac-clay"><span class="ac-care-icon"><svg class="icon"><use href="#ac-heart" xlink:href="#ac-heart"/></svg></span><div><strong>ดูแลด้วยใจ ใกล้คุณเสมอ</strong><span>Connected with care.</span></div></div>
+    </section>
+
+    <section class="ac-card ac-clay" aria-labelledby="ac-login-title">
+      <div class="ac-card-heading"><span class="ac-tile"><svg class="icon"><use href="#ac-wifi" xlink:href="#ac-wifi"/></svg></span><span class="ac-mini-label">HOSPITAL WI-FI</span></div>
+      <h2 id="ac-login-title">ยินดีต้อนรับ</h2>
+      <p class="ac-card-intro">เข้าสู่ระบบเพื่อเชื่อมต่ออินเทอร์เน็ต</p>
+
+      {* ไม่ใส่ action: เบราว์เซอร์จะ POST กลับ URL เดิมพร้อม query string ที่ controller ส่งมา (ClearPass ประมวลผลเอง) ฟิลด์ต้องชื่อ user / password *}
+      <form id="ac-login-form" class="ac-form" method="post" novalidate>
+        <p id="ac-status" class="ac-status" role="alert" hidden></p>
+
+        <div class="ac-field">
+          <label for="ac-user">ชื่อผู้ใช้งาน <span>Username</span></label>
+          <div class="ac-input"><svg class="icon"><use href="#ac-user" xlink:href="#ac-user"/></svg><input id="ac-user" name="user" type="text" autocomplete="username" placeholder="กรอกชื่อผู้ใช้งาน" required autocapitalize="none" autocorrect="off" spellcheck="false" aria-describedby="ac-user-error"></div>
+          <p class="ac-field-error" id="ac-user-error"></p>
+        </div>
+
+        <div class="ac-field">
+          <label for="ac-password">รหัสผ่าน <span>Password</span></label>
+          <div class="ac-input"><svg class="icon"><use href="#ac-lock" xlink:href="#ac-lock"/></svg><input id="ac-password" name="password" type="password" autocomplete="current-password" placeholder="กรอกรหัสผ่าน" required aria-describedby="ac-password-error"><button class="ac-show-password" type="button" aria-label="แสดงรหัสผ่าน" aria-pressed="false"><svg class="icon"><use href="#ac-eye" xlink:href="#ac-eye"/></svg></button></div>
+          <p class="ac-field-error" id="ac-password-error"></p>
+        </div>
+
+        <span class="ac-hint">ใช้บัญชีที่ได้รับจากโรงพยาบาล</span>
+        <input type="hidden" name="submit" value="Log In">
+        <button class="ac-btn" id="ac-submit" type="submit"><span>เข้าสู่ระบบ</span><svg class="icon"><use href="#ac-arrow" xlink:href="#ac-arrow"/></svg></button>
+      </form>
+
+      <div class="ac-card-bottom"><svg class="icon"><use href="#ac-heart" xlink:href="#ac-heart"/></svg><span>อีกหนึ่งความใส่ใจ จากโรงพยาบาลเอกชล</span></div>
+    </section>
+  </main>
+
+  <footer class="ac-footer"><span>© <span id="ac-year">2026</span> Aikchol Hospital. All rights reserved.</span><span>เชื่อมต่อด้วยความใส่ใจ <span class="ac-footer-dot">•</span> AIKCHOL CONNECT</span></footer>
+</div>
+
